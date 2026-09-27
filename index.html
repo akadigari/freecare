@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Should your Maryland hospital bill be free?</title>
+  <meta name="description" content="Check in a minute whether Maryland law says your hospital bill should be free or cheaper. Nothing you type leaves this page.">
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <main>
+    <header class="intro">
+      <h1>Should your Maryland hospital bill be free?</h1>
+      <p class="intro__lede">Maryland law says hospitals have to give free or cheaper care to a lot of people who never ask for it. Answer a few questions to see where you land.</p>
+      <p class="intro__privacy">Takes about a minute. Nothing you type leaves this page.</p>
+    </header>
+
+    <form id="check-form" class="check" novalidate>
+      <div class="field">
+        <label for="householdSize">How many people live in your household?</label>
+        <p class="hint" id="householdSize-hint">Count yourself, your spouse or partner, and anyone you claim as a dependent.</p>
+        <input id="householdSize" name="householdSize" inputmode="numeric" autocomplete="off" aria-describedby="householdSize-hint householdSize-error" placeholder="e.g. 4">
+        <p class="error" id="householdSize-error" data-error-for="householdSize" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="income">Household income for the year, before taxes</label>
+        <input id="income" name="income" inputmode="decimal" autocomplete="off" aria-describedby="income-error" placeholder="e.g. 60,000">
+        <p class="error" id="income-error" data-error-for="income" hidden></p>
+      </div>
+
+      <fieldset class="field">
+        <legend>Do you live in Maryland?</legend>
+        <div class="choices choices--inline">
+          <label class="choice"><input type="radio" name="resident" value="yes"> Yes</label>
+          <label class="choice"><input type="radio" name="resident" value="no"> No</label>
+        </div>
+        <p class="error" data-error-for="resident" hidden></p>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Does anyone in your household get any of these?</legend>
+        <p class="hint">Any one of these means your care should be free.</p>
+        <div class="choices">
+          <label class="choice"><input type="checkbox" name="snap"> SNAP (food stamps)</label>
+          <label class="choice"><input type="checkbox" name="wic"> WIC</label>
+          <label class="choice"><input type="checkbox" name="energyAssistance"> Maryland Energy Assistance</label>
+          <label class="choice"><input type="checkbox" name="schoolMeals"> A child who gets free or reduced-price school meals</label>
+        </div>
+      </fieldset>
+
+      <details class="optional">
+        <summary>Optional: your bill date and medical bills</summary>
+        <div class="field">
+          <label for="firstBillDate">When did you get your first bill from the hospital?</label>
+          <p class="hint" id="firstBillDate-hint">You have 240 days from this date to apply.</p>
+          <input id="firstBillDate" name="firstBillDate" type="date" aria-describedby="firstBillDate-hint firstBillDate-error">
+          <p class="error" id="firstBillDate-error" data-error-for="firstBillDate" hidden></p>
+        </div>
+        <div class="field">
+          <label for="medicalBills">Medical bills your household got in the last 12 months</label>
+          <p class="hint" id="medicalBills-hint">If this is more than a quarter of your income, you may get a bigger discount.</p>
+          <input id="medicalBills" name="medicalBills" inputmode="decimal" autocomplete="off" aria-describedby="medicalBills-hint medicalBills-error" placeholder="e.g. 2,500">
+          <p class="error" id="medicalBills-error" data-error-for="medicalBills" hidden></p>
+        </div>
+      </details>
+
+      <button type="submit" class="check__button">Check my bill</button>
+    </form>
+
+    <section id="result" class="result" aria-live="polite" hidden></section>
+  </main>
+
+  <footer class="footer">
+    <p>Built on Maryland Health-General 19-214.1, COMAR 10.37.13.06 and the 2026 federal poverty guidelines. It runs entirely in your browser. A guide, not legal advice.</p>
+  </footer>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
