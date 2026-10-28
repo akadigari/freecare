@@ -32,7 +32,18 @@ test('detail explains the math with the real poverty line', () => {
 
 test('program detail names the programs', () => {
   assert.equal(view({ income: 200000, programs: { snap: true, wic: true } }).detail,
-    'Because you get SNAP and WIC, you automatically qualify for free care.');
+    'Because you get SNAP and WIC, you automatically qualify for free care, whatever your income. '
+    + 'Your household income of $200,000 is 606.1% of the 2026 federal poverty line ($33,000 for a household of 4).');
+});
+
+test('non-resident results still show the income math', () => {
+  assert.match(view({ isMarylandResident: false }).detail, /181\.9% of the 2026 federal poverty line/);
+});
+
+test('entered medical bills under 25% get a clear answer on hardship', () => {
+  assert.match(view({ income: 110000, medicalBillsLast12Months: 10000 }).detail,
+    /Your medical bills from the last 12 months are not more than 25% of your income, so the hardship discount doesn't apply\./);
+  assert.doesNotMatch(view({ income: 110000, medicalBillsLast12Months: 10000 }).detail, /If your medical bills/);
 });
 
 test('hardship and near-hardship explanations', () => {

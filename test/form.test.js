@@ -62,3 +62,16 @@ test('commas must be in groups of three, so "95,00" is not read as $9,500', () =
     assert.equal(parseForm(fields({ income: typed }), TODAY).input.income, value, typed);
   }
 });
+
+test('huge numbers are an error, not Infinity', () => {
+  const huge = '9'.repeat(400);
+  const result = parseForm(fields({ income: huge, medicalBills: huge }), TODAY);
+  assert.equal(result.ok, false);
+  assert.equal(result.errors.income, 'Enter an amount like 60,000.');
+  assert.equal(result.errors.medicalBills, 'Enter an amount like 60,000.');
+});
+
+test('a half-typed bill date is an error, not silently blank', () => {
+  assert.equal(parseForm(fields({ firstBillDateIncomplete: true }), TODAY).errors.firstBillDate,
+    'Finish typing the date, or clear it.');
+});

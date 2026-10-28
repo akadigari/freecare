@@ -1,16 +1,20 @@
 import { parseIsoDate } from './dates.js';
 import { PROGRAM_KEYS } from './rules.js';
+import { MIN_HOUSEHOLD, MAX_HOUSEHOLD } from './poverty.js';
 
 const PLAIN_MONEY = /^\d+(\.\d{1,2})?$/;
 // Commas only in groups of three, so a typo like "95,00" is an error instead of $9,500.
 const GROUPED_MONEY = /^\d{1,3}(,\d{3})+(\.\d{1,2})?$/;
 const WHOLE = /^\d+$/;
+const MONEY_ERROR = 'Enter an amount like 60,000.';
 
 function parseMoney(text) {
   const cleaned = String(text ?? '').replace(/[\s$]/g, '');
   if (cleaned === '') return { value: null };
-  const isValid = PLAIN_MONEY.test(cleaned) || GROUPED_MONEY.test(cleaned);
-  return isValid ? { value: Number(cleaned.replace(/,/g, '')) } : { error: 'Enter an amount like 60,000.' };
+  if (!PLAIN_MONEY.test(cleaned) && !GROUPED_MONEY.test(cleaned)) return { error: MONEY_ERROR };
+  const value = Number(cleaned.replace(/,/g, ''));
+  // A number too long to represent becomes Infinity, which no rule can use.
+  return Number.isFinite(value) ? { value } : { error: MONEY_ERROR };
 }
 
 function parseIncome(text) {
@@ -23,9 +27,9 @@ function parseIncome(text) {
 function parseHouseholdSize(text) {
   const cleaned = String(text ?? '').trim();
   const size = WHOLE.test(cleaned) ? Number(cleaned) : Number.NaN;
-  return size >= 1 && size <= 20
+  return size >= MIN_HOUSEHOLD && size <= MAX_HOUSEHOLD
     ? { value: size }
-    : { error: 'Enter how many people live in your household, from 1 to 20.' };
+    : { error: `Enter how many people live in your household, from ${MIN_HOUSEHOLD} to ${MAX_HOUSEHOLD}.` };
 }
 
 function parseResident(text) {
@@ -34,7 +38,9 @@ function parseResident(text) {
   return { error: 'Pick yes or no.' };
 }
 
-function parseBillDate(text, todayIso) {
+// The browser reports a half-typed date as an empty value, so the page passes a flag for it.
+function parseBillDate(text, todayIso, isIncomplete) {
+  if (isIncomplete) return { error: 'Finish typing the date, or clear it.' };
   if (!text) return { value: null };
   try {
     return parseIsoDate(text) > parseIsoDate(todayIso)
@@ -51,7 +57,7 @@ export function parseForm(fields, todayIso) {
     householdSize: parseHouseholdSize(fields.householdSize),
     income: parseIncome(fields.income),
     resident: parseResident(fields.resident),
-    firstBillDate: parseBillDate(fields.firstBillDate, todayIso),
+    firstBillDate: parseBillDate(fields.firstBillDate, todayIso, fields.firstBillDateIncomplete === true),
     medicalBills: parseMoney(fields.medicalBills),
   };
   const errors = Object.fromEntries(

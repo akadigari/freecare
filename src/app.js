@@ -1,9 +1,10 @@
-import { parseForm } from './form.js';
-import { checkEligibility, PROGRAM_KEYS } from './rules.js';
-import { describe } from './present.js';
+import { runCheck } from './check.js';
+import { PROGRAM_KEYS } from './rules.js';
 import { todayIso } from './dates.js';
 
 const form = document.getElementById('check-form');
+const button = form.querySelector('.check__button');
+const formError = document.getElementById('form-error');
 const resultRegion = document.getElementById('result');
 const FIELDS_WITH_ERRORS = Object.freeze(['householdSize', 'income', 'resident', 'firstBillDate', 'medicalBills']);
 
@@ -15,12 +16,14 @@ function readFields(formElement) {
     income: text('income'),
     resident: text('resident'),
     firstBillDate: text('firstBillDate'),
+    // A half-typed date reads as empty, so ask the browser whether the box holds junk.
+    firstBillDateIncomplete: formElement.elements.firstBillDate.validity.badInput,
     medicalBills: text('medicalBills'),
     ...Object.fromEntries(PROGRAM_KEYS.map((key) => [key, data.has(key)])),
   };
 }
 
-function showErrors(errors) {
+function showFieldErrors(errors) {
   for (const name of FIELDS_WITH_ERRORS) {
     const message = errors[name] ?? '';
     const slot = form.querySelector(`[data-error-for="${name}"]`);
@@ -33,6 +36,16 @@ function showErrors(errors) {
   const firstBad = FIELDS_WITH_ERRORS.find((name) => errors[name]);
   if (firstBad === 'firstBillDate' || firstBad === 'medicalBills') form.querySelector('details').open = true;
   if (firstBad) form.querySelector(`[name="${firstBad}"]`).focus();
+}
+
+function showFormError(message) {
+  formError.textContent = message;
+  formError.hidden = message === '';
+}
+
+function clearResult() {
+  resultRegion.replaceChildren();
+  resultRegion.hidden = true;
 }
 
 function element(tag, text, className) {
@@ -81,14 +94,15 @@ function renderResult(result, view) {
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const today = todayIso();
-  const parsed = parseForm(readFields(form), today);
-  showErrors(parsed.ok ? {} : parsed.errors);
-  if (!parsed.ok) {
-    resultRegion.replaceChildren();
-    resultRegion.hidden = true;
+  const outcome = runCheck(readFields(form), todayIso());
+  showFieldErrors(outcome.status === 'invalid' ? outcome.errors : {});
+  showFormError(outcome.status === 'failed' ? outcome.message : '');
+  if (outcome.status === 'ok') {
+    renderResult(outcome.result, outcome.view);
     return;
   }
-  const result = checkEligibility(parsed.input, today);
-  renderResult(result, describe(result));
+  clearResult();
 });
+
+// The button starts off in the HTML so the form can't submit without this script.
+button.disabled = false;

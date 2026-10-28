@@ -32,20 +32,20 @@
       <fieldset class="field">
         <legend>Do you live in Maryland?</legend>
         <div class="choices choices--inline">
-          <label class="choice"><input type="radio" name="resident" value="yes"> Yes</label>
-          <label class="choice"><input type="radio" name="resident" value="no"> No</label>
+          <label class="choice"><input type="radio" name="resident" value="yes" aria-describedby="resident-error"> Yes</label>
+          <label class="choice"><input type="radio" name="resident" value="no" aria-describedby="resident-error"> No</label>
         </div>
-        <p class="error" data-error-for="resident" hidden></p>
+        <p class="error" id="resident-error" data-error-for="resident" hidden></p>
       </fieldset>
 
       <fieldset class="field">
         <legend>Does anyone in your household get any of these?</legend>
-        <p class="hint">Any one of these means your care should be free.</p>
+        <p class="hint" id="programs-hint">If you live in Maryland, any one of these means your care should be free.</p>
         <div class="choices">
-          <label class="choice"><input type="checkbox" name="snap"> SNAP (food stamps)</label>
-          <label class="choice"><input type="checkbox" name="wic"> WIC</label>
-          <label class="choice"><input type="checkbox" name="energyAssistance"> Maryland Energy Assistance</label>
-          <label class="choice"><input type="checkbox" name="schoolMeals"> A child who gets free or reduced-price school meals</label>
+          <label class="choice"><input type="checkbox" name="snap" aria-describedby="programs-hint"> SNAP (food stamps)</label>
+          <label class="choice"><input type="checkbox" name="wic" aria-describedby="programs-hint"> WIC</label>
+          <label class="choice"><input type="checkbox" name="energyAssistance" aria-describedby="programs-hint"> Maryland Energy Assistance</label>
+          <label class="choice"><input type="checkbox" name="schoolMeals" aria-describedby="programs-hint"> A child who gets free or reduced-price school meals</label>
         </div>
       </fieldset>
 
@@ -59,13 +59,17 @@
         </div>
         <div class="field">
           <label for="medicalBills">Medical bills your household got in the last 12 months</label>
-          <p class="hint" id="medicalBills-hint">If this is more than a quarter of your income, you may get a bigger discount.</p>
+          <p class="hint" id="medicalBills-hint">If your income is above 300% of the poverty line, bills over a quarter of your income can still get you a discount.</p>
           <input id="medicalBills" name="medicalBills" inputmode="decimal" autocomplete="off" aria-describedby="medicalBills-hint medicalBills-error" placeholder="e.g. 2,500">
           <p class="error" id="medicalBills-error" data-error-for="medicalBills" hidden></p>
         </div>
       </details>
 
-      <button type="submit" class="check__button">Check my bill</button>
+      <noscript>
+        <p class="error">This checker needs JavaScript turned on. It runs entirely in your browser either way.</p>
+      </noscript>
+      <p class="error" id="form-error" role="alert" hidden></p>
+      <button type="submit" class="check__button" disabled>Check my bill</button>
     </form>
 
     <section id="result" class="result" aria-live="polite" hidden></section>

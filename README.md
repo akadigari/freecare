@@ -20,7 +20,7 @@ Poverty line (HHS, 2026, 48 states and DC, published Jan 15, 2026): $15,960 for 
 | Over 200%, up to 250% | 75% off |
 | Over 250%, up to 300% | 60% off |
 | Over 300%, up to 500%, and medical bills in the last 12 months are more than 25% of income | 50%, 45%, 40% or 35% off |
-| Anything above that | Not required by state law. Ask the hospital anyway |
+| Over 300% without that hardship, or over 500% | Not required by state law. Ask the hospital anyway |
 | Not a Maryland resident | Not covered by the state rule. Check the hospital's own policy |
 
 Sources: [Maryland Health-General 19-214.1](https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ghg&enactments=false&section=19-214.1), [COMAR 10.37.13.06](https://regs.maryland.gov/us/md/exec/comar/10.37.13.06), [HHS poverty guidelines](https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines). Checked September 2026. This is a guide, not legal advice. Hospitals can be more generous, and some also look at savings.
@@ -28,7 +28,7 @@ Sources: [Maryland Health-General 19-214.1](https://mgaleg.maryland.gov/mgawebsi
 ## Run it
 
 ```
-npm test                      # 40 tests, Node 22, no dependencies
+npm test                      # 53 tests, Node 22, no dependencies
 python3 -m http.server 8780   # then open http://localhost:8780
 ```
 
@@ -41,6 +41,7 @@ python3 -m http.server 8780   # then open http://localhost:8780
 | `src/rules.js` | Maryland's tiers, hardship, programs and the 240-day window |
 | `src/form.js` | Turns what people type ("$60,000") into clean input |
 | `src/present.js` | Plain-English results |
+| `src/check.js` | Runs a check from form fields to result, and turns any unexpected error into a clear message |
 | `src/app.js`, `index.html`, `src/styles.css` | The page. System fonts, no outside requests |
 
 ## Not in this version

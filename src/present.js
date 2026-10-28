@@ -54,16 +54,16 @@ function headlineFor({ tier, discount, medicalBillsLast12Months, percentOfPovert
 }
 
 function detailFor(result) {
-  const { tier, presumptivePrograms, percentOfPovertyLine, hardship, householdSize } = result;
-  if (tier === TIERS.NOT_COVERED) {
-    return "Maryland's free and reduced-cost care rules cover Maryland residents. "
-      + 'Many hospitals still help other patients through their own financial assistance policy.';
-  }
-  if (presumptivePrograms.length > 0) {
-    return `Because you get ${joinNames(presumptivePrograms)}, you automatically qualify for free care.`;
-  }
+  const { tier, presumptivePrograms, percentOfPovertyLine, hardship, householdSize, medicalBillsLast12Months } = result;
   const math = `Your household income of ${money.format(result.income)} is ${formatPercent(percentOfPovertyLine)} of the ${POVERTY_GUIDELINES.year} `
     + `federal poverty line (${money.format(result.povertyLine)} for a household of ${householdSize}).`;
+  if (tier === TIERS.NOT_COVERED) {
+    return "Maryland's free and reduced-cost care rules cover Maryland residents. "
+      + `Many hospitals still help other patients through their own financial assistance policy. ${math}`;
+  }
+  if (presumptivePrograms.length > 0) {
+    return `Because you get ${joinNames(presumptivePrograms)}, you automatically qualify for free care, whatever your income. ${math}`;
+  }
   if (tier === TIERS.FREE) {
     return `${math} At or below 200%, Maryland hospitals have to give medically necessary care for free.`;
   }
@@ -72,6 +72,10 @@ function detailFor(result) {
       + 'Maryland hospitals have to cut what you owe.';
   }
   if (tier === TIERS.REDUCED) return `${math} Between 200% and 300%, Maryland hospitals have to cut what you owe.`;
+  if (percentOfPovertyLine <= 500 && medicalBillsLast12Months !== null) {
+    return `${math} Your medical bills from the last 12 months are not more than 25% of your income, `
+      + "so the hardship discount doesn't apply.";
+  }
   if (percentOfPovertyLine <= 500) {
     return `${math} If your medical bills from the last 12 months are more than 25% of your income, `
       + 'you may qualify for a hardship discount of 35% to 50%.';
