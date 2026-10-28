@@ -22,7 +22,7 @@ export function rightsFor(lang) {
   return Object.freeze({
     title: T.title,
     intro: T.intro,
-    items: Object.freeze([...T.items]),
+    groups: Object.freeze(T.groups.map((g) => Object.freeze({ ...g }))),
     helpIntro: T.helpIntro,
     help: Object.freeze(HELP_LINKS.map((link) => Object.freeze({ ...link, label: T.help[link.id] }))),
     source: Object.freeze({ ...RIGHTS_SOURCE, before: T.sourceBefore, after: T.sourceAfter(readOn) }),

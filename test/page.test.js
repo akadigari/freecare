@@ -32,7 +32,7 @@ test('the page has a whole-form error slot and uses the tested check', () => {
 });
 
 test('the page says who made it and how to reach them', () => {
-  assert.match(html, /Made by Ayush Kadigari/);
+  assert.match(html, /I am Ayush Kadigari/);
   assert.match(html, /arkadigari@gmail\.com/);
   assert.match(html, /not a hospital and not a lawyer/i);
 });
@@ -121,6 +121,8 @@ test('people who know their hourly or monthly pay can work out the yearly figure
 test('the page tells people what a hospital cannot do to collect', () => {
   assert.match(html, /<section id="rights" class="rights">/);
   assert.match(app, /from '\.\/rights\.js'/);
+  const css2 = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+  assert.match(css2, /counter-increment: question/, 'questions are numbered like a paper form');
   assert.match(app, /rightsFor\(/);
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
   assert.match(css, /\.rights\b/);

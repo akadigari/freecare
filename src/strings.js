@@ -8,7 +8,7 @@ export const PAGE = Object.freeze({
   en: Object.freeze({
     'lang.toggle': 'Español',
     title: 'Should your Maryland hospital bill be free?',
-    lede: 'Maryland law says hospitals have to give free or cheaper care to a lot of people who never ask for it. Answer a few questions to see where you land.',
+    lede: 'Maryland hospitals have to wipe out or cut the bills of a lot of people who never ask. Four questions tell you if you are one of them.',
     privacy: 'Takes about a minute. Nothing you type leaves this page.',
     'householdSize.label': 'How many people live in your household?',
     'householdSize.hint': 'Count yourself, your spouse or partner, and anyone you claim as a dependent.',
@@ -68,13 +68,13 @@ export const PAGE = Object.freeze({
     'members.hint': 'You are the first row. The form has room for seven people.',
     'apply.button': 'Download the filled application (PDF)',
     'apply.note': "Nothing you type is sent anywhere. The PDF is made on your device. Send it to the hospital's financial assistance office, listed on your bill.",
-    'footer.law': 'Built on Maryland Health-General 19-214.1, COMAR 10.37.13.06 and the 2026 federal poverty guidelines. It runs entirely in your browser. A guide, not legal advice.',
-    'footer.made': 'Made by Ayush Kadigari, a University of Maryland student, not a hospital and not a lawyer. Questions or a wrong answer:',
+    'footer.law': 'Built on Maryland Health-General 19-214.1 and 19-214.2, COMAR 10.37.13.06 and the 2026 federal poverty guidelines. It runs in your browser and sends nothing anywhere. A guide, not legal advice.',
+    'footer.made': 'I am Ayush Kadigari, a student at the University of Maryland, not a hospital and not a lawyer. If this gets something wrong, tell me:',
   }),
   es: Object.freeze({
     'lang.toggle': 'English',
     title: '¿Debería ser gratis su factura del hospital en Maryland?',
-    lede: 'La ley de Maryland obliga a los hospitales a dar atención gratis o más barata a mucha gente que nunca la pide. Responda unas preguntas para ver dónde queda usted.',
+    lede: 'Los hospitales de Maryland tienen que borrar o bajar las facturas de mucha gente que nunca lo pide. Cuatro preguntas le dicen si usted es una de esas personas.',
     privacy: 'Toma como un minuto. Nada de lo que escriba sale de esta página.',
     'householdSize.label': '¿Cuántas personas viven en su hogar?',
     'householdSize.hint': 'Cuéntese a usted, a su esposo, esposa o pareja, y a cualquier persona que declare como dependiente.',
@@ -134,8 +134,8 @@ export const PAGE = Object.freeze({
     'members.hint': 'Usted es la primera fila. El formulario tiene espacio para siete personas.',
     'apply.button': 'Descargar la solicitud llena (PDF)',
     'apply.note': 'Nada de lo que escriba se envía a ningún lado. El PDF se crea en su dispositivo. Envíelo a la oficina de asistencia financiera del hospital, que aparece en su factura.',
-    'footer.law': 'Basado en Maryland Health-General 19-214.1, COMAR 10.37.13.06 y las pautas federales de pobreza de 2026. Funciona completamente en su navegador. Es una guía, no un consejo legal.',
-    'footer.made': 'Hecho por Ayush Kadigari, estudiante de la Universidad de Maryland, no un hospital ni un abogado. Preguntas o una respuesta equivocada:',
+    'footer.law': 'Basado en Maryland Health-General 19-214.1 y 19-214.2, COMAR 10.37.13.06 y las pautas federales de pobreza de 2026. Funciona en su navegador y no envía nada a ningún lado. Es una guía, no un consejo legal.',
+    'footer.made': 'Soy Ayush Kadigari, estudiante de la Universidad de Maryland, no un hospital ni un abogado. Si esto se equivoca en algo, dígamelo:',
   }),
 });
 
@@ -152,8 +152,8 @@ export const UI = Object.freeze({
     applyFailed: 'The form could not be filled in. Reload the page and try again, or download the blank form from the hospital.',
     basedOn: 'Based on ',
     payYearly: (amount) => `About ${amount} a year.`,
-    whatToBring: 'What to bring',
-    goodToKnow: 'Good to know',
+    whatToBring: 'Before you go',
+    goodToKnow: 'Where this can be wrong',
     photoReading: (pct) => `Reading the bill on this phone, ${pct}%. Nothing is uploaded.`,
     photoLoading: 'Loading the reader (about 6 MB, once)...',
     photoNothing: 'Could not find a hospital, a bill date or an amount. Try a brighter, flatter photo, or type the details.',
@@ -181,8 +181,8 @@ export const UI = Object.freeze({
     applyFailed: 'No se pudo llenar el formulario. Recargue la página e intente de nuevo, o descargue el formulario en blanco del hospital.',
     basedOn: 'Basado en ',
     payYearly: (amount) => `Unos ${amount} al año.`,
-    whatToBring: 'Qué llevar',
-    goodToKnow: 'Bueno saber',
+    whatToBring: 'Antes de ir',
+    goodToKnow: 'Dónde puede fallar esto',
     photoReading: (pct) => `Leyendo la factura en este teléfono, ${pct}%. No se sube nada.`,
     photoLoading: 'Cargando el lector (unos 6 MB, una sola vez)...',
     photoNothing: 'No se encontró un hospital, una fecha de factura ni un monto. Pruebe con una foto más clara y plana, o escriba los datos.',
@@ -262,11 +262,8 @@ export const RESULT = Object.freeze({
     bring: ["Proof of income, like pay stubs or last year's tax return", 'Something that shows who lives in your household', 'Your hospital bill'],
     proof: (names) => `Proof you get ${names}`,
     notes: [
-      'This is an estimate. The hospital makes the final decision.',
-      'Hospitals can be more generous than this.',
-      'Some hospitals also look at your savings.',
-      'Every Maryland hospital uses the same financial assistance application.',
-      'This is a guide, not legal advice.',
+      'The hospital decides, not this page. It can be more generous than the rule, and a few ask about savings too.',
+      'Not legal advice.',
     ],
     sourceLabels: ['Maryland Health-General § 19-214.1', 'COMAR 10.37.13.06', 'HHS 2026 poverty guidelines'],
   }),
@@ -301,69 +298,51 @@ export const RESULT = Object.freeze({
     bring: ['Comprobante de ingresos, como talones de pago o la declaración de impuestos del año pasado', 'Algo que muestre quiénes viven en su hogar', 'Su factura del hospital'],
     proof: (names) => `Comprobante de que recibe ${names}`,
     notes: [
-      'Esto es un estimado. El hospital toma la decisión final.',
-      'Los hospitales pueden ser más generosos que esto.',
-      'Algunos hospitales también miran sus ahorros.',
-      'Todos los hospitales de Maryland usan la misma solicitud de asistencia financiera.',
-      'Esto es una guía, no un consejo legal.',
+      'El hospital decide, no esta página. Puede ser más generoso que la regla, y algunos también preguntan por los ahorros.',
+      'No es un consejo legal.',
     ],
     sourceLabels: ['Maryland Health-General § 19-214.1', 'COMAR 10.37.13.06', 'Pautas federales de pobreza 2026 (HHS)'],
   }),
 });
 
-// What a hospital may not do to collect, from Health-General § 19-214.2. The subsection each
-// sentence rests on is noted so the next person can check it against the statute.
+// What a hospital may not do to collect, from Health-General § 19-214.2, written as the three
+// situations people are actually in. The subsections each sentence rests on are noted.
 export const RIGHTS = Object.freeze({
   en: Object.freeze({
     locale: 'en-US',
-    title: 'Already paid, or being chased for the bill?',
-    intro: 'Maryland law also limits what a hospital can do to collect. These rules apply to every Maryland hospital:',
-    items: [
+    title: "What the hospital can't do to you",
+    intro: 'The same law that makes care free also fences in how hospitals collect. The parts that matter most:',
+    groups: [
       // (c)(1)
-      'If you paid, then apply within 240 days of your first bill and the hospital finds you qualified for free care, it has to refund anything over $25 within 30 days of that decision.',
-      // (b)(5), (e)(2)
-      'For at least 240 days after your first bill, the hospital cannot sue you or report you to a credit bureau.',
-      // (b)(6)
-      'The hospital cannot sue you at all over a bill of $500 or less.',
-      // (f)(4), (b)(12)
-      'If you qualify for free or reduced-cost care, the hospital cannot garnish your wages, and it cannot charge interest before a court judgment.',
-      // (f)(1), (f)(2), (f)(3)
-      'No hospital can put a lien on your home or force its sale over a hospital bill, or have you arrested over one.',
-      // (f)(6), (h)(1), (h)(3)
-      'Before it can sue, the hospital has to check whether you qualify for free or reduced-cost care, and mail you a notice with an application at least 45 days ahead.',
+      { heading: 'You already paid', text: 'Apply anyway. If you do it within 240 days of your first bill and the hospital finds you qualified for free care, it owes you back everything over $25, within 30 days of saying so.' },
+      // (b)(5), (e)(2), (b)(6), (f)(6), (h)(1), (h)(3), (f)(4), (b)(12), (f)(1), (f)(2), (f)(3), (b)(2)
+      { heading: "They're threatening to sue, or to hurt your credit", text: "They can't do either for at least 240 days after the first bill, and they can't sue over $500 or less, ever. Before any lawsuit they have to check whether you qualify for free or reduced-cost care and mail you a notice with an application 45 days ahead. If you qualify, they can't garnish your wages or add interest before a judge rules. No hospital can put a lien on your home, force its sale, or have you arrested over a bill, and it can't sell the debt except to a group that will cancel it." },
       // (d)(3)
-      'If you set up a payment plan, the monthly payment cannot be more than 5% of your monthly household income.',
-      // (b)(2), (l)
-      'The hospital cannot sell your debt, except to a group that will cancel it.',
+      { heading: 'They want a payment plan', text: "Fine, but the monthly payment can't be more than 5% of your monthly household income." },
     ],
-    helpIntro: 'If a hospital breaks these rules, you can complain to the state or get free help:',
+    helpIntro: "If a hospital crosses one of these lines, two state offices take complaints, and they're free:",
     help: {
-      hscrc: 'File a complaint with the Health Services Cost Review Commission, the state agency over hospital bills',
-      heau: "Get free help from the Attorney General's Health Education and Advocacy Unit",
+      hscrc: 'The Health Services Cost Review Commission, the state agency over hospital bills',
+      heau: "The Attorney General's Health Education and Advocacy Unit, which mediates for free",
     },
-    sourceBefore: 'Based on ',
-    sourceAfter: (date) => `, read on ${date}. A guide, not legal advice.`,
+    sourceBefore: 'From ',
+    sourceAfter: (date) => `, read on ${date}.`,
   }),
   es: Object.freeze({
     locale: 'es-US',
-    title: '¿Ya pagó, o lo están persiguiendo por la factura?',
-    intro: 'La ley de Maryland también limita lo que un hospital puede hacer para cobrar. Estas reglas aplican a todos los hospitales de Maryland:',
-    items: [
-      'Si pagó, luego solicita dentro de los 240 días de su primera factura y el hospital decide que calificaba para atención gratis, tiene que devolverle todo lo que pase de $25 dentro de los 30 días de esa decisión.',
-      'Durante al menos 240 días después de su primera factura, el hospital no puede demandarlo ni reportarlo a una agencia de crédito.',
-      'El hospital no puede demandarlo por una factura de $500 o menos.',
-      'Si califica para atención gratis o a costo reducido, el hospital no puede embargar su salario ni cobrarle intereses antes de una sentencia judicial.',
-      'Ningún hospital puede poner un gravamen sobre su casa ni forzar su venta por una factura de hospital, ni hacer que lo arresten por una.',
-      'Antes de poder demandarlo, el hospital tiene que revisar si usted califica para atención gratis o a costo reducido, y enviarle por correo un aviso con una solicitud al menos 45 días antes.',
-      'Si acuerda un plan de pagos, el pago mensual no puede ser más del 5% de los ingresos mensuales de su hogar.',
-      'El hospital no puede vender su deuda, salvo a un grupo que la vaya a cancelar.',
+    title: 'Lo que el hospital no puede hacerle',
+    intro: 'La misma ley que hace gratis la atención también limita cómo cobran los hospitales. Las partes que más importan:',
+    groups: [
+      { heading: 'Ya pagó', text: 'Solicite de todos modos. Si lo hace dentro de los 240 días de su primera factura y el hospital decide que calificaba para atención gratis, le debe todo lo que pase de $25, dentro de los 30 días de decirlo.' },
+      { heading: 'Amenazan con demandarlo o dañar su crédito', text: 'No pueden hacer ninguna de las dos cosas durante al menos 240 días después de la primera factura, y nunca pueden demandarlo por $500 o menos. Antes de cualquier demanda tienen que revisar si usted califica para atención gratis o a costo reducido y enviarle por correo un aviso con una solicitud 45 días antes. Si califica, no pueden embargar su salario ni sumar intereses antes de que un juez decida. Ningún hospital puede poner un gravamen sobre su casa, forzar su venta ni hacer que lo arresten por una factura, y no puede vender la deuda salvo a un grupo que la vaya a cancelar.' },
+      { heading: 'Quieren un plan de pagos', text: 'Está bien, pero el pago mensual no puede ser más del 5% de los ingresos mensuales de su hogar.' },
     ],
-    helpIntro: 'Si un hospital rompe estas reglas, puede quejarse ante el estado o recibir ayuda gratis:',
+    helpIntro: 'Si un hospital cruza una de estas líneas, dos oficinas del estado reciben quejas, y son gratis:',
     help: {
-      hscrc: 'Presente una queja ante la Health Services Cost Review Commission, la agencia estatal a cargo de las facturas de hospital',
-      heau: 'Reciba ayuda gratis de la Unidad de Educación y Defensa en Salud (HEAU) del Procurador General de Maryland',
+      hscrc: 'La Health Services Cost Review Commission, la agencia estatal a cargo de las facturas de hospital',
+      heau: 'La Unidad de Educación y Defensa en Salud (HEAU) del Procurador General, que media sin costo',
     },
-    sourceBefore: 'Basado en ',
-    sourceAfter: (date) => `, leído el ${date}. Es una guía, no un consejo legal.`,
+    sourceBefore: 'De ',
+    sourceAfter: (date) => `, leído el ${date}.`,
   }),
 });

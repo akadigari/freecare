@@ -316,6 +316,13 @@ select option { color: #000000; background: #ffffff; }
 
 .rights { margin-top: 2.5rem; border-top: 3px double var(--rule); padding-top: 1.25rem; }
 .rights h2 { font-size: 1.5rem; margin: 0 0 0.5rem; }
+.rights h3 { font-size: 1rem; margin: 1.25rem 0 0.25rem; }
+.rights p { margin: 0 0 0.5rem; }
 .rights ul { margin: 0 0 1rem; padding-left: 1.2rem; }
-.rights li { margin: 0 0 0.5rem; }
+.rights li { margin: 0 0 0.4rem; }
+.verdict__notes { margin: 0; }
+
+/* The four questions are numbered the way a paper form numbers them. */
+.check { counter-reset: question; }
+.check > .field > label::before, .check > fieldset > legend::before { counter-increment: question; content: counter(question) '.'; display: inline-block; min-width: 1.4rem; font-family: var(--mono); font-weight: 400; color: var(--muted); }
 .rights__source { color: var(--muted); font-size: 0.9rem; }

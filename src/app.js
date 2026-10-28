@@ -131,7 +131,7 @@ function renderResult(result, view, { focus = true } = {}) {
     element('h3', UI[lang].whatToBring),
     bulletList(view.bring),
     element('h3', UI[lang].goodToKnow),
-    bulletList(view.notes),
+    element('p', view.notes.join(' '), 'verdict__notes'),
     sourceLine(view.sources),
     resultActions(result),
   );
@@ -298,7 +298,8 @@ function renderRights() {
   });
   const source = element('p', null, 'rights__source');
   source.append(document.createTextNode(R.source.before), outsideLink(R.source.label, R.source.url), document.createTextNode(R.source.after));
-  rightsSection.replaceChildren(element('h2', R.title), element('p', R.intro), bulletList(R.items), element('p', R.helpIntro), help, source);
+  const groups = R.groups.flatMap((g) => [element('h3', g.heading), element('p', g.text)]);
+  rightsSection.replaceChildren(element('h2', R.title), element('p', R.intro), ...groups, element('p', R.helpIntro), help, source);
 }
 
 function setLanguage(next) {
@@ -428,3 +429,6 @@ setLanguage(pickLanguage(savedLanguage(), navigator.language));
 
 // The button starts off in the HTML so the form can't submit without this script.
 button.disabled = false;
+
+// Keeps a copy of the page on the phone, so it opens in a hospital basement with no signal.
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});

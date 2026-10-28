@@ -17,14 +17,14 @@ test('help goes to the state, never to a phone number that could be wrong', () =
   }
   const everything = JSON.stringify(RIGHTS);
   assert.doesNotMatch(everything, /\d{3}[-.\s]\d{3}[-.\s]\d{4}/, 'no phone numbers');
-  assert.doesNotMatch(everything, /—/, 'no em dashes');
+  assert.doesNotMatch(everything, /\u2014/, 'no em dashes');
 });
 
-test('each right is plain English with the number the law uses', () => {
+test('three situations, in plain English, with the numbers the law uses', () => {
   const en = rightsFor('en');
-  assert.equal(en.title, 'Already paid, or being chased for the bill?');
-  assert.ok(en.items.length >= 6);
-  const text = en.items.join(' ');
+  assert.equal(en.title, "What the hospital can't do to you");
+  assert.deepEqual(en.groups.map((g) => g.heading), ['You already paid', "They're threatening to sue, or to hurt your credit", 'They want a payment plan']);
+  const text = en.groups.map((g) => g.text).join(' ');
   assert.match(text, /\$25/);
   assert.match(text, /240 days/);
   assert.match(text, /\$500 or less/);
@@ -40,9 +40,9 @@ test('each right is plain English with the number the law uses', () => {
 test('Spanish has the same shape and the same numbers', () => {
   const en = rightsFor('en');
   const es = rightsFor('es');
-  assert.equal(es.items.length, en.items.length);
+  assert.equal(es.groups.length, en.groups.length);
   assert.notEqual(es.title, en.title);
-  es.items.forEach((item, i) => assert.notEqual(item, en.items[i], `item ${i} untranslated`));
-  for (const number of ['$25', '240', '$500', '5%', '45']) assert.match(es.items.join(' '), new RegExp(number.replace('$', '\\$')));
+  es.groups.forEach((g, i) => assert.notEqual(g.text, en.groups[i].text, `group ${i} untranslated`));
+  for (const number of ['$25', '240', '$500', '5%', '45']) assert.match(es.groups.map((g) => g.text).join(' '), new RegExp(number.replace('$', '\\$')));
   assert.equal(rightsFor('fr').title, en.title, 'unknown languages fall back to English');
 });

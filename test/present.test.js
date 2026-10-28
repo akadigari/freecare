@@ -69,7 +69,7 @@ test('what to bring adds proof of programs', () => {
 test('always cites the law and says it is not legal advice', () => {
   const result = view();
   assert.equal(result.sources.length, 3);
-  assert.ok(result.notes.includes('This is a guide, not legal advice.'));
+  assert.ok(result.notes.includes('Not legal advice.'));
   assert.ok(Object.isFrozen(result));
 });
 
@@ -85,8 +85,8 @@ test('blank medical bills between 300% and 500% get a hopeful headline, not a fi
 });
 
 test('the result says who decides and that the number is an estimate', () => {
-  assert.ok(view().notes.includes('This is an estimate. The hospital makes the final decision.'));
-  assert.ok(view({ income: 200000 }).notes.includes('This is an estimate. The hospital makes the final decision.'));
+  assert.match(view().notes[0], /^The hospital decides, not this page\./);
+  assert.match(view({ income: 200000 }).notes[0], /^The hospital decides, not this page\./);
 });
 
 test('every result has a short stamp for the page to print across it', () => {
@@ -114,7 +114,7 @@ test('the same result reads in Spanish', () => {
   assert.equal(es().deadlineText, 'Tiene 240 días desde su primera factura para solicitar.');
   assert.match(es({ firstBillDate: '2026-09-01' }).deadlineText, /^Le quedan \d+ días para solicitar\. La fecha límite es el \d+ de \w+ de 2027\.$/);
   assert.equal(es({ programs: { snap: true, wic: true } }).bring.at(-1), 'Comprobante de que recibe SNAP y WIC');
-  assert.ok(es().notes.includes('Esto es un estimado. El hospital toma la decisión final.'));
+  assert.match(es().notes[0], /^El hospital decide, no esta página\./);
   assert.equal(es().sources[2].label, 'Pautas federales de pobreza 2026 (HHS)');
   assert.equal(es().sources[0].url, view().sources[0].url);
 });
