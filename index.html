@@ -52,6 +52,13 @@
 
       <details class="optional">
         <summary data-i18n="optional.summary">Optional: your bill date and medical bills</summary>
+        <div class="field photo">
+          <label for="billPhoto" data-i18n="photo.label">Or take a photo of the bill</label>
+          <p class="hint" id="billPhoto-hint" data-i18n="photo.hint">The page reads it on your phone to find the hospital, the bill date and the amount. Nothing is uploaded. You confirm each one.</p>
+          <input id="billPhoto" name="billPhoto" type="file" accept="image/*" capture="environment" aria-describedby="billPhoto-hint">
+          <p class="hint" id="photo-status" role="status" hidden></p>
+          <ul id="photo-findings" class="findings" hidden></ul>
+        </div>
         <div class="field">
           <label for="firstBillDate" data-i18n="firstBillDate.label">When did you get your first bill from the hospital?</label>
           <p class="hint" id="firstBillDate-hint" data-i18n="firstBillDate.hint">You have 240 days from this date to apply.</p>

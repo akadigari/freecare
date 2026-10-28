@@ -7,6 +7,8 @@ import { applyLanguage, pickLanguage, textFor, translateError } from './i18n.js'
 import { UI } from './strings.js';
 import { HOSPITALS, hospitalById } from './hospitals.js';
 import { deadlineCalendar, CALENDAR_FILE } from './calendar.js';
+import { readBillImage } from './ocr.js';
+import { readBill } from './bill.js';
 
 const form = document.getElementById('check-form');
 const button = form.querySelector('.check__button');
@@ -19,6 +21,9 @@ const membersBox = document.getElementById('members');
 const langToggle = document.getElementById('lang-toggle');
 const hospitalSelect = document.getElementById('hospital');
 const hospitalHelp = document.getElementById('hospital-help');
+const billPhoto = document.getElementById('billPhoto');
+const photoStatus = document.getElementById('photo-status');
+const photoFindings = document.getElementById('photo-findings');
 const FIELDS_WITH_ERRORS = Object.freeze(['householdSize', 'income', 'resident', 'firstBillDate', 'medicalBills']);
 const LANG_KEY = 'freecare-lang';
 
@@ -254,6 +259,63 @@ function setLanguage(next) {
 langToggle.addEventListener('click', () => setLanguage(lang === 'en' ? 'es' : 'en'));
 hospitalSelect.addEventListener('change', renderHospitalHelp);
 fillHospitalList();
+
+function setPhotoStatus(text) {
+  photoStatus.textContent = text;
+  photoStatus.hidden = text === '';
+}
+
+// Each thing the reader found gets its own "Use this" button, so nothing fills in unconfirmed.
+function finding(label, snippet, apply) {
+  const item = element('li');
+  const use = element('button', UI[lang].useThis);
+  use.type = 'button';
+  use.addEventListener('click', () => {
+    apply();
+    use.textContent = UI[lang].used;
+    use.disabled = true;
+  });
+  item.append(element('span', label), use, element('small', snippet));
+  return item;
+}
+
+function showFindings(read) {
+  const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  const T = UI[lang];
+  const items = [];
+  if (read.hospital) {
+    items.push(finding(T.foundHospital(read.hospital.name), '', () => {
+      hospitalSelect.value = read.hospital.id;
+      renderHospitalHelp();
+    }));
+  }
+  if (read.billDate) {
+    items.push(finding(T.foundDate(read.billDate.iso), read.billDate.source, () => {
+      form.elements.firstBillDate.value = read.billDate.iso;
+    }));
+  }
+  if (read.amountDue) {
+    items.push(finding(T.foundAmount(money.format(read.amountDue.cents / 100)), read.amountDue.source, () => {
+      form.elements.medicalBills.value = String(Math.round(read.amountDue.cents / 100));
+    }));
+  }
+  photoFindings.replaceChildren(...items);
+  photoFindings.hidden = items.length === 0;
+  setPhotoStatus(items.length === 0 ? T.photoNothing : '');
+}
+
+billPhoto.addEventListener('change', async () => {
+  const file = billPhoto.files?.[0];
+  if (!file) return;
+  photoFindings.hidden = true;
+  setPhotoStatus(UI[lang].photoLoading);
+  try {
+    const text = await readBillImage(file, { onProgress: (p) => setPhotoStatus(UI[lang].photoReading(Math.round(p * 100))) });
+    showFindings(readBill(text));
+  } catch {
+    setPhotoStatus(UI[lang].photoFailed);
+  }
+});
 
 applyForm.addEventListener('submit', async (event) => {
   event.preventDefault();

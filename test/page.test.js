@@ -92,3 +92,17 @@ test('a result can be printed and its deadline saved to a calendar', () => {
   assert.match(app, /from '\.\/calendar\.js'/);
   assert.match(app, /CALENDAR_FILE/);
 });
+
+test('a photo of the bill is read on the device, never uploaded', () => {
+  assert.match(html, /<input id="billPhoto" name="billPhoto" type="file" accept="image\/\*" capture="environment"/);
+  assert.match(html, /id="photo-findings"/);
+  assert.match(app, /from '\.\/ocr\.js'/);
+  assert.match(app, /from '\.\/bill\.js'/);
+  const ocr = readFileSync(new URL('../src/ocr.js', import.meta.url), 'utf8');
+  assert.match(ocr, /import\('\.\.\/vendor\/tesseract\/tesseract\.esm\.min\.js'\)/, 'the recognizer loads only when a photo is picked');
+  assert.doesNotMatch(ocr, /https?:\/\//, 'no CDN');
+  assert.match(ocr, /worker\.terminate\(\)/);
+  for (const file of ['tesseract.esm.min.js', 'worker.min.js', 'tesseract-core-lstm.wasm.js', 'tesseract-core-simd-lstm.wasm.js', 'tesseract-core-relaxedsimd-lstm.wasm.js', 'lang/eng.traineddata.gz']) {
+    assert.doesNotThrow(() => readFileSync(new URL(`../vendor/tesseract/${file}`, import.meta.url)), file);
+  }
+});

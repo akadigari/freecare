@@ -10,6 +10,9 @@ Should your Maryland hospital bill be free? A one-page checker that answers in a
 - Lists what to bring, and which law the answer comes from
 - Works in English and Spanish. A switch at the top of the page changes every word, including the results and the error messages. The choice is remembered in your browser only.
 - Lets you pick your hospital (19 Maryland hospitals and health systems, from the state's own list) and links to that hospital's policy on the state's site, with a plain line on where to send the form.
+- Reads a photo of the bill, on your phone. Text recognition (tesseract.js, vendored, about 6 MB that loads only when you pick a photo) runs in the browser and finds the hospital, the bill date and the amount due. Each one shows with a "Use this" button; nothing fills in until you confirm it, and the photo is never uploaded. It works well on a flat, well-lit photo of a printed bill and poorly on a crumpled or dark one.
+- Prints the result on one clean page for the billing desk, and saves the deadline as a calendar reminder (a standard .ics file made on the device, with a warning a week before).
+- Asks the Medicaid and assets questions, so the application comes out complete.
 - Fills in Maryland's statewide financial assistance application for you. Every Maryland hospital uses the same form (revised March 6, 2026). You add your name, address, phone and household members; the page puts those and your income, residency and hardship answers into the state's own PDF and downloads it. The signature line stays blank for you to sign. The PDF is built on your device with pdf-lib; the page fetches only its own copy of the form.
 
 ## The rules
@@ -31,7 +34,7 @@ Sources: [Maryland Health-General 19-214.1](https://mgaleg.maryland.gov/mgawebsi
 ## Run it
 
 ```
-npm test                      # 80 tests, Node 22, no dependencies to install
+npm test                      # 92 tests, Node 22, no dependencies to install
 python3 -m http.server 8780   # then open http://localhost:8780
 ```
 
@@ -49,9 +52,13 @@ python3 -m http.server 8780   # then open http://localhost:8780
 | `src/strings.js`, `src/i18n.js` | Every word on the page in English and Spanish, and the switch between them. The tests check that the English on the page matches the English in the strings file |
 | `src/hospitals.js` | The 19 hospitals and health systems with each one's policy link, read from HSCRC's Financial Assistance Policies page on 2026-10-28. No phone numbers on purpose |
 | `forms/` | The blank state form, downloaded from a Maryland hospital's copy of the HSCRC form, revised 2026-03-06 |
-| `vendor/pdf-lib/` | pdf-lib 1.17.1 (MIT), used to fill the form in the browser |
+| `src/bill.js` | Reads the recognized text of a bill: the hospital (by everyday name), the bill date (statement date wins, due date never), the amount due |
+| `src/ocr.js` | Runs the on-device text recognizer against a photo, with the vendored worker, core and English model |
+| `src/calendar.js` | The deadline reminder as a calendar file |
+| `vendor/pdf-lib/` | pdf-lib 1.17.1 (MIT), used to fill the form in the browser. Loads only when someone fills the application |
+| `vendor/tesseract/` | tesseract.js 7.0.0 and tesseract.js-core 7.0.0 (Apache-2.0), LSTM builds only, plus the fast English model from tessdata. Loads only when someone picks a photo |
 | `src/app.js`, `index.html`, `src/styles.css` | The page. System fonts, no outside requests |
 
 ## Not in this version
 
-Reading a photo of the bill, other states, hospital phone numbers, and a public URL. The form filler does not ask about Medicaid or assets; those questions are left blank for you to answer on the PDF. The filled form is the English state form even when the page is in Spanish; hospitals accept it either way.
+Other states, hospital phone numbers, and a public URL. The photo reader handles English bills only. The form filler does not ask about Medicaid or assets; those questions are left blank for you to answer on the PDF. The filled form is the English state form even when the page is in Spanish; hospitals accept it either way.
