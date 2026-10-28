@@ -73,6 +73,45 @@
     </form>
 
     <section id="result" class="result" aria-live="polite" hidden></section>
+
+    <section id="apply" class="apply" hidden>
+      <h2>Fill out the application</h2>
+      <p>Every Maryland hospital uses the same financial assistance form. Add your details and this page fills it in for you, on your phone. The signature line stays blank for you to sign. Check every box before you send it.</p>
+      <form id="apply-form" novalidate>
+        <div class="field">
+          <label for="applicantName">Your full name</label>
+          <input id="applicantName" name="applicantName" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="street">Street address</label>
+          <input id="street" name="street" autocomplete="street-address">
+        </div>
+        <div class="field field--short">
+          <label for="unit">Apartment or unit</label>
+          <input id="unit" name="unit">
+        </div>
+        <div class="field">
+          <label for="city">City</label>
+          <input id="city" name="city" autocomplete="address-level2">
+        </div>
+        <div class="field field--short">
+          <label for="zip">ZIP code</label>
+          <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code">
+        </div>
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="e.g. 240-555-1234">
+        </div>
+        <fieldset class="field">
+          <legend>People in your household</legend>
+          <p class="hint" id="members-hint">You are the first row. The form has room for seven people.</p>
+          <div id="members" class="members" aria-describedby="members-hint"></div>
+        </fieldset>
+        <p class="error" id="apply-error" role="alert" hidden></p>
+        <button type="submit" id="apply-button" class="check__button">Download the filled application (PDF)</button>
+        <p class="hint">Nothing you type is sent anywhere. The PDF is made on your device. Send it to the hospital's financial assistance office, listed on your bill.</p>
+      </form>
+    </section>
   </main>
 
   <footer class="footer">

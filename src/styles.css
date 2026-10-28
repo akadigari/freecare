@@ -155,3 +155,11 @@ input[aria-invalid="true"] { border-color: var(--error); }
 .verdict__sources { color: var(--muted); font-size: 0.95rem; margin: 1.5rem 0 0; }
 
 .footer { color: var(--muted); font-size: 0.9rem; padding-bottom: 3rem; }
+
+.apply { margin-top: 2rem; }
+.apply h2 { font-size: 1.4rem; margin: 0 0 0.5rem; }
+.field--short input { max-width: 10rem; }
+.members { display: grid; gap: 0.6rem; }
+.member { display: grid; grid-template-columns: 2fr 1fr 1.4fr; gap: 0.5rem; align-items: end; }
+.member label { font-size: 0.85rem; color: var(--muted); display: block; }
+@media (max-width: 480px) { .member { grid-template-columns: 1fr; } }

@@ -36,3 +36,25 @@ test('the page says who made it and how to reach them', () => {
   assert.match(html, /arkadigari@gmail\.com/);
   assert.match(html, /not a hospital and not a lawyer/i);
 });
+
+test('after the result, the page can fill the state application without leaving the browser', () => {
+  assert.match(html, /<section id="apply"[^>]*hidden>/);
+  assert.match(html, /name="applicantName"/);
+  assert.match(html, /name="street"/);
+  assert.match(html, /name="city"/);
+  assert.match(html, /name="zip"/);
+  assert.match(html, /name="phone"/);
+  assert.match(html, /id="members"/);
+  assert.match(html, /id="apply-button"/);
+  assert.match(html, /The signature line stays blank/);
+  assert.match(app, /from '\.\/apply\.js'/);
+  assert.match(app, /from '\.\.\/vendor\/pdf-lib\/pdf-lib\.esm\.min\.js'/);
+  assert.match(app, /fetch\(FORM\.file\)/);
+});
+
+test('the page loads only its own files', () => {
+  const imports = app.match(/from '([^']+)'/g) || [];
+  for (const line of imports) assert.match(line, /from '\.{1,2}\//, line);
+  assert.doesNotMatch(html, /https?:\/\/[^"']+\.(js|css)/);
+  assert.doesNotMatch(app, /https?:\/\//);
+});
