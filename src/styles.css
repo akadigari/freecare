@@ -1,31 +1,43 @@
+/* freecare looks like the thing you are holding: a hospital statement on a desk.
+   One sheet of paper, black ink, Maryland's gold rules, and a red stamp for the answer.
+   System fonts only; the page never loads anything from outside. */
+
 :root {
-  --paper: #f3f6f8;
+  --desk: #d8d3c6;
+  --paper: #fcfbf7;
   --card: #ffffff;
-  --ink: #102a36;
-  --muted: #4a5f6b;
-  --line: #cfd9df;
-  --focus: #7a4b00;
-  --free: #0f7a55;
-  --reduced: #1d5fa8;
-  --ask: #9a5b00;
-  --other: #5b6770;
+  --ink: #000000;
+  --muted: #5a5853;
+  --line: #000000;
+  --rule: #e2b400;
+  --row: #f1efe7;
+  --focus: #9a6b00;
+  --stamp: #c8102e;
+  --free: #c8102e;
+  --reduced: #c8102e;
+  --ask: #1f4e79;
+  --other: #5a5853;
   --error: #b3261e;
-  --serif: ui-serif, "New York", Georgia, "Times New Roman", serif;
-  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #0f1d24;
-    --card: #152a33;
-    --ink: #e6eef2;
-    --muted: #a3b4bd;
-    --line: #2b434e;
-    --focus: #f0b73a;
-    --free: #4cc493;
-    --reduced: #6fa8ec;
-    --ask: #e3a64a;
-    --other: #a3b4bd;
+    --desk: #0e0f11;
+    --paper: #1d1f22;
+    --card: #24272b;
+    --ink: #f3efe4;
+    --muted: #b4ae9f;
+    --line: #f3efe4;
+    --rule: #ffd520;
+    --row: #25282c;
+    --focus: #ffd520;
+    --stamp: #ff5a6a;
+    --free: #ff5a6a;
+    --reduced: #ff5a6a;
+    --ask: #8ab8e8;
+    --other: #b4ae9f;
     --error: #ff8a80;
   }
 }
@@ -34,132 +46,192 @@
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--desk);
   color: var(--ink);
-  font: 400 1.0625rem/1.6 var(--sans);
+  font: 400 1.0625rem/1.65 var(--serif);
 }
 
-main, .footer {
-  max-width: 40rem;
+/* The sheet. On a phone it fills the screen; on a desk it sits in the middle with a shadow like paper. */
+main {
+  max-width: 42rem;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem) 2rem;
+  background: var(--paper);
 }
 
-main { padding-top: clamp(2rem, 6vw, 4.5rem); }
+@media (min-width: 46rem) {
+  main {
+    margin: 3rem auto 0;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25), 0 18px 40px rgba(0, 0, 0, 0.18);
+  }
+}
+
+.footer {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1rem clamp(1rem, 4vw, 3rem) 3rem;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 0.9rem;
+  border-top: 1px dashed var(--line);
+}
+
+@media (min-width: 46rem) {
+  .footer { box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18); margin-bottom: 3rem; }
+}
 
 a { color: inherit; text-underline-offset: 3px; }
 
 :focus-visible {
   outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 3px;
+  outline-offset: 3px;
+}
+
+/* Statement header: the title sits above a double gold rule, the way a bill's header does. */
+.intro {
+  border-bottom: 3px double var(--rule);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 h1 {
-  font-family: var(--serif);
   font-weight: 700;
-  font-size: clamp(2.2rem, 7vw, 3.4rem);
-  line-height: 1.05;
+  font-size: clamp(2rem, 7vw, 3.1rem);
+  line-height: 1.03;
+  letter-spacing: -0.01em;
   margin: 0 0 1rem;
   text-wrap: balance;
 }
 
-.intro__lede { font-size: 1.1875rem; margin: 0 0 0.5rem; }
-.intro__privacy { color: var(--muted); margin: 0 0 2rem; }
+.intro__lede { font-size: 1.125rem; margin: 0 0 0.5rem; max-width: 36rem; }
+.intro__privacy { color: var(--muted); margin: 0; font-size: 0.95rem; }
 
-.check {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: clamp(1.25rem, 4vw, 2rem);
+/* The questions are line items. Each sits on its own row of the statement. */
+.check { padding: 0; }
+
+.field {
+  margin: 0;
+  padding: 1rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--row);
 }
-
-.field { margin: 0 0 1.5rem; padding: 0; border: 0; }
 
 .field > label, legend {
   display: block;
-  font-weight: 650;
-  margin-bottom: 0.35rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
   padding: 0;
 }
 
 .hint { color: var(--muted); font-size: 0.95rem; margin: 0 0 0.5rem; }
 
+/* Fill-in blanks, like a paper form: a line to write on, numbers in a typewriter face. */
 input:not([type="radio"], [type="checkbox"]) {
   width: 100%;
   max-width: 18rem;
-  font: inherit;
+  font: 500 1.05rem/1.4 var(--mono);
   color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 0.6rem 0.75rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--line);
+  border-radius: 0;
+  padding: 0.4rem 0.25rem;
 }
 
-input[aria-invalid="true"] { border-color: var(--error); }
+input::placeholder { color: var(--muted); opacity: 0.7; }
 
-.choices { display: grid; gap: 0.5rem; }
+input[aria-invalid="true"] { border-bottom-color: var(--error); }
+
+.choices { display: grid; gap: 0.45rem; }
 .choices--inline { grid-auto-flow: column; justify-content: start; gap: 1.5rem; }
 
 .choice { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; }
-.choice input { width: 1.15rem; height: 1.15rem; accent-color: var(--free); }
+.choice input { width: 1.15rem; height: 1.15rem; accent-color: var(--stamp); margin: 0; }
 
 .error { color: var(--error); font-weight: 600; font-size: 0.95rem; margin: 0.4rem 0 0; }
 
-.optional { margin: 0 0 1.5rem; }
-.optional summary { cursor: pointer; font-weight: 650; color: var(--muted); margin-bottom: 1rem; }
+.optional { padding: 1rem 0; border-bottom: 1px solid var(--row); }
+.optional summary { cursor: pointer; font-weight: 700; color: var(--muted); margin-bottom: 0.75rem; }
+.optional .field { border: 0; padding: 0.5rem 0; }
 
+/* The one button on a bill is the box that says what to do next. Black, square, no fuss. */
 .check__button {
-  font: inherit;
-  font-weight: 700;
-  color: #ffffff;
+  display: inline-block;
+  margin-top: 1.25rem;
+  font: 700 1.05rem/1 var(--serif);
+  color: var(--paper);
   background: var(--ink);
-  border: 0;
-  border-radius: 8px;
-  padding: 0.85rem 1.5rem;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  padding: 0.9rem 1.4rem;
   cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
-  .check__button { color: var(--paper); }
-}
+.check__button:hover { background: var(--paper); color: var(--ink); }
+.check__button:disabled { opacity: 0.5; cursor: default; }
 
-.result { margin: 2rem 0; }
+/* The answer: stamped across the statement in red ink. */
+.result { margin: 2.5rem 0 0; }
 
 .verdict {
   --tone: var(--other);
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-left: 8px solid var(--tone);
-  border-radius: 10px;
-  padding: clamp(1.25rem, 4vw, 2rem);
+  position: relative;
+  border-top: 3px double var(--rule);
+  padding: 1.5rem 0 0;
 }
 
-.verdict--free { --tone: var(--free); }
-.verdict--reduced { --tone: var(--reduced); }
+.verdict--free, .verdict--reduced { --tone: var(--stamp); }
 .verdict--not_required { --tone: var(--ask); }
 
-.verdict__headline {
-  font-family: var(--serif);
-  font-size: clamp(1.9rem, 6vw, 2.6rem);
-  line-height: 1.1;
-  color: var(--tone);
+.verdict__stamp {
+  display: inline-block;
   margin: 0 0 1rem;
+  padding: 0.3rem 0.8rem;
+  font: 800 clamp(1.6rem, 6vw, 2.4rem)/1 var(--serif);
+  letter-spacing: 0.06em;
+  color: var(--tone);
+  border: 5px double var(--tone);
+  transform: rotate(-4deg);
+  transform-origin: left center;
+  animation: stamp 160ms ease-out;
+}
+
+@keyframes stamp {
+  from { transform: rotate(-4deg) scale(1.35); opacity: 0; }
+  to { transform: rotate(-4deg) scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verdict__stamp { animation: none; }
+}
+
+.verdict__headline {
+  font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+  line-height: 1.12;
+  margin: 0 0 0.75rem;
 }
 
 .verdict__headline:focus { outline: none; }
-.verdict__deadline { font-weight: 650; }
+.verdict__detail { margin: 0 0 0.75rem; }
+.verdict__deadline { font-weight: 700; margin: 0 0 0.5rem; }
 
 .verdict h3 { font-size: 1rem; margin: 1.5rem 0 0.4rem; }
 .verdict ul { margin: 0; padding-left: 1.2rem; }
-.verdict__sources { color: var(--muted); font-size: 0.95rem; margin: 1.5rem 0 0; }
 
-.footer { color: var(--muted); font-size: 0.9rem; padding-bottom: 3rem; }
+/* The law is the fine print at the bottom of the statement. */
+.verdict__sources {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 1.5rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--line);
+}
 
-.apply { margin-top: 2rem; }
-.apply h2 { font-size: 1.4rem; margin: 0 0 0.5rem; }
+/* The application section continues the same sheet. */
+.apply { margin-top: 2.5rem; border-top: 3px double var(--rule); padding-top: 1.25rem; }
+.apply h2 { font-size: 1.5rem; margin: 0 0 0.5rem; }
 .field--short input { max-width: 10rem; }
-.members { display: grid; gap: 0.6rem; }
-.member { display: grid; grid-template-columns: 2fr 1fr 1.4fr; gap: 0.5rem; align-items: end; }
+.members { display: grid; gap: 0.75rem; }
+.member { display: grid; grid-template-columns: 2fr 1fr 1.4fr; gap: 0.75rem; align-items: end; }
 .member label { font-size: 0.85rem; color: var(--muted); display: block; }
-@media (max-width: 480px) { .member { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .member { grid-template-columns: 1fr; gap: 0.4rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--row); } }

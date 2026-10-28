@@ -94,11 +94,20 @@ function deadlineTextFor(deadline) {
   return `You have ${days} left to apply. The deadline is ${longDate.format(new Date(`${deadline.deadline}T00:00:00Z`))}.`;
 }
 
+// A few words the page stamps across the result, like a rubber stamp on a bill.
+function stampFor({ tier, discount }) {
+  if (tier === TIERS.FREE) return 'FREE';
+  if (tier === TIERS.REDUCED) return `${discount}% OFF`;
+  if (tier === TIERS.NOT_COVERED) return 'NOT COVERED';
+  return 'ASK ANYWAY';
+}
+
 export function describe(result) {
   const programProof = result.presumptivePrograms.length > 0
     ? [`Proof you get ${joinNames(result.presumptivePrograms)}`]
     : [];
   return Object.freeze({
+    stamp: stampFor(result),
     headline: headlineFor(result),
     detail: detailFor(result),
     deadlineText: deadlineTextFor(result.deadline),

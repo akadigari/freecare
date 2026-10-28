@@ -84,7 +84,11 @@ function renderResult(result, view) {
   const card = element('article', null, `verdict verdict--${result.tier}`);
   const headline = element('h2', view.headline, 'verdict__headline');
   headline.tabIndex = -1;
+  // The stamp repeats the headline for the eye, so screen readers skip it.
+  const stamp = element('p', view.stamp, 'verdict__stamp');
+  stamp.ariaHidden = 'true';
   card.append(
+    stamp,
     headline,
     element('p', view.detail, 'verdict__detail'),
     element('p', view.deadlineText, 'verdict__deadline'),

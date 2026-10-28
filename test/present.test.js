@@ -88,3 +88,12 @@ test('the result says who decides and that the number is an estimate', () => {
   assert.ok(view().notes.includes('This is an estimate. The hospital makes the final decision.'));
   assert.ok(view({ income: 200000 }).notes.includes('This is an estimate. The hospital makes the final decision.'));
 });
+
+test('every result has a short stamp for the page to print across it', () => {
+  assert.equal(view().stamp, 'FREE');
+  assert.equal(view({ income: 70000 }).stamp, '75% OFF');
+  assert.equal(view({ income: 95000 }).stamp, '60% OFF');
+  assert.equal(view({ income: 110000, medicalBillsLast12Months: 40000 }).stamp, '50% OFF');
+  assert.equal(view({ income: 200000 }).stamp, 'ASK ANYWAY');
+  assert.equal(view({ isMarylandResident: false }).stamp, 'NOT COVERED');
+});

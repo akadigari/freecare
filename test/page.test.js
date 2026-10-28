@@ -58,3 +58,8 @@ test('the page loads only its own files', () => {
   assert.doesNotMatch(html, /https?:\/\/[^"']+\.(js|css)/);
   assert.doesNotMatch(app, /https?:\/\//);
 });
+
+test('the result is printed with a stamp the screen reader skips', () => {
+  assert.match(app, /verdict__stamp/);
+  assert.match(app, /ariaHidden = 'true'|aria-hidden/);
+});
