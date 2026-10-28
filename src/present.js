@@ -21,6 +21,7 @@ const BRING = Object.freeze([
 ]);
 
 const NOTES = Object.freeze([
+  'This is an estimate. The hospital makes the final decision.',
   'Hospitals can be more generous than this.',
   'Some hospitals also look at your savings.',
   'Every Maryland hospital uses the same financial assistance application.',

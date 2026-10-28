@@ -83,3 +83,8 @@ test('blank medical bills between 300% and 500% get a hopeful headline, not a fi
     "Maryland law doesn't require a discount at your income. Ask anyway.");
   assert.equal(view({ income: 200000 }).headline, "Maryland law doesn't require a discount at your income. Ask anyway.");
 });
+
+test('the result says who decides and that the number is an estimate', () => {
+  assert.ok(view().notes.includes('This is an estimate. The hospital makes the final decision.'));
+  assert.ok(view({ income: 200000 }).notes.includes('This is an estimate. The hospital makes the final decision.'));
+});
