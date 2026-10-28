@@ -6,6 +6,7 @@ import { fillApplication, FORM, MAX_MEMBERS } from './apply.js';
 import { applyLanguage, pickLanguage, textFor, translateError } from './i18n.js';
 import { UI } from './strings.js';
 import { HOSPITALS, hospitalById } from './hospitals.js';
+import { deadlineCalendar, CALENDAR_FILE } from './calendar.js';
 
 const form = document.getElementById('check-form');
 const button = form.querySelector('.check__button');
@@ -115,10 +116,38 @@ function renderResult(result, view, { focus = true } = {}) {
     element('h3', UI[lang].goodToKnow),
     bulletList(view.notes),
     sourceLine(view.sources),
+    resultActions(result),
   );
   resultRegion.replaceChildren(card);
   resultRegion.hidden = false;
   if (focus) headline.focus();
+}
+
+function downloadText(text, filename, type) {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const link = element('a');
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}
+
+// Print the result, and when there is a real deadline, save it as a calendar reminder.
+function resultActions(result) {
+  const actions = element('div', null, 'verdict__actions');
+  const print = element('button', UI[lang].printResult);
+  print.type = 'button';
+  print.addEventListener('click', () => window.print());
+  actions.append(print);
+  if (result.deadline?.isOpen) {
+    const save = element('button', UI[lang].addToCalendar);
+    save.type = 'button';
+    save.addEventListener('click', () => downloadText(deadlineCalendar(result.deadline.deadline, lang), CALENDAR_FILE, 'text/calendar'));
+    actions.append(save);
+  }
+  return actions;
 }
 
 // One row per person: name, age, relationship. Row one is the applicant.

@@ -263,3 +263,31 @@ select {
   padding: 0.4rem 0.25rem;
 }
 select option { color: #000000; background: #ffffff; }
+
+/* Two small actions under the result: print it, or save the deadline. */
+.verdict__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.25rem 0 0; }
+.verdict__actions button {
+  font: 600 0.95rem/1 var(--serif);
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+}
+.verdict__actions button:hover { background: var(--ink); color: var(--paper); }
+
+/* Printing gives the patient one page: the answer, the math, the law and the deadline. */
+@media print {
+  body { background: #ffffff; color: #000000; font-size: 11pt; }
+  main, .footer { max-width: none; margin: 0; padding: 0; box-shadow: none; background: #ffffff; }
+  .lang, .check, .apply, .verdict__actions { display: none; }
+  .intro { border-bottom-color: #000000; }
+  .intro__lede, .intro__privacy { display: none; }
+  .result { margin: 1rem 0 0; }
+  .verdict { --tone: #000000; border-top-color: #000000; }
+  .verdict__stamp { animation: none; }
+  .verdict__sources { color: #000000; border-top-color: #000000; }
+  a { text-decoration: none; }
+  .footer { border-top: 1px solid #000000; color: #000000; font-size: 9pt; }
+}
