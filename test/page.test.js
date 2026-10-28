@@ -7,7 +7,7 @@ const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
 const count = (text, pattern) => (text.match(pattern) || []).length;
 
 test('without JavaScript the button stays off, so answers never land in the URL', () => {
-  assert.match(html, /<button type="submit" class="check__button" disabled>/);
+  assert.match(html, /<button type="submit" class="check__button" disabled[^>]*>/);
   assert.match(html, /<noscript>[\s\S]*JavaScript[\s\S]*<\/noscript>/);
   assert.match(app, /button\.disabled = false/);
 });
@@ -62,4 +62,12 @@ test('the page loads only its own files', () => {
 test('the result is printed with a stamp the screen reader skips', () => {
   assert.match(app, /verdict__stamp/);
   assert.match(app, /ariaHidden = 'true'|aria-hidden/);
+});
+
+test('the page can switch to Spanish', () => {
+  assert.match(html, /<html lang="en">/);
+  assert.match(html, /id="lang-toggle"[^>]*data-i18n="lang.toggle"/);
+  assert.match(app, /from '\.\/i18n\.js'/);
+  assert.match(app, /applyLanguage\(/);
+  assert.doesNotMatch(html, /data-i18n="[^"]*"[^>]*>[^<]*<a /, 'a marked element must not contain a link');
 });

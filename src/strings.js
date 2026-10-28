@@ -1,0 +1,232 @@
+// Every word the page shows, in English and Spanish. The English is the source of truth
+// for the page; the test suite checks that index.html still matches it.
+// Spanish uses "usted" and plain words, the way a clinic worker would say it.
+
+export const LANGS = Object.freeze(['en', 'es']);
+
+export const PAGE = Object.freeze({
+  en: Object.freeze({
+    'lang.toggle': 'Español',
+    title: 'Should your Maryland hospital bill be free?',
+    lede: 'Maryland law says hospitals have to give free or cheaper care to a lot of people who never ask for it. Answer a few questions to see where you land.',
+    privacy: 'Takes about a minute. Nothing you type leaves this page.',
+    'householdSize.label': 'How many people live in your household?',
+    'householdSize.hint': 'Count yourself, your spouse or partner, and anyone you claim as a dependent.',
+    'householdSize.placeholder': 'e.g. 4',
+    'income.label': 'Household income for the year, before taxes',
+    'income.placeholder': 'e.g. 60,000',
+    'resident.legend': 'Do you live in Maryland?',
+    yes: 'Yes',
+    no: 'No',
+    'programs.legend': 'Does anyone in your household get any of these?',
+    'programs.hint': 'If you live in Maryland, any one of these means your care should be free.',
+    snap: 'SNAP (food stamps)',
+    wic: 'WIC',
+    energyAssistance: 'Maryland Energy Assistance',
+    schoolMeals: 'A child who gets free or reduced-price school meals',
+    'optional.summary': 'Optional: your bill date and medical bills',
+    'firstBillDate.label': 'When did you get your first bill from the hospital?',
+    'firstBillDate.hint': 'You have 240 days from this date to apply.',
+    'medicalBills.label': 'Medical bills your household got in the last 12 months',
+    'medicalBills.hint': 'If your income is above 300% of the poverty line, bills over a quarter of your income can still get you a discount.',
+    'medicalBills.placeholder': 'e.g. 2,500',
+    'check.button': 'Check my bill',
+    'apply.title': 'Fill out the application',
+    'apply.intro': 'Every Maryland hospital uses the same financial assistance form. Add your details and this page fills it in for you, on your phone. The signature line stays blank for you to sign. Check every box before you send it.',
+    'applicantName.label': 'Your full name',
+    'street.label': 'Street address',
+    'unit.label': 'Apartment or unit',
+    'city.label': 'City',
+    'zip.label': 'ZIP code',
+    'phone.label': 'Phone number',
+    'phone.placeholder': 'e.g. 240-555-1234',
+    'members.legend': 'People in your household',
+    'members.hint': 'You are the first row. The form has room for seven people.',
+    'apply.button': 'Download the filled application (PDF)',
+    'apply.note': "Nothing you type is sent anywhere. The PDF is made on your device. Send it to the hospital's financial assistance office, listed on your bill.",
+    'footer.law': 'Built on Maryland Health-General 19-214.1, COMAR 10.37.13.06 and the 2026 federal poverty guidelines. It runs entirely in your browser. A guide, not legal advice.',
+    'footer.made': 'Made by Ayush Kadigari, a University of Maryland student, not a hospital and not a lawyer. Questions or a wrong answer:',
+  }),
+  es: Object.freeze({
+    'lang.toggle': 'English',
+    title: '¿Debería ser gratis su factura del hospital en Maryland?',
+    lede: 'La ley de Maryland obliga a los hospitales a dar atención gratis o más barata a mucha gente que nunca la pide. Responda unas preguntas para ver dónde queda usted.',
+    privacy: 'Toma como un minuto. Nada de lo que escriba sale de esta página.',
+    'householdSize.label': '¿Cuántas personas viven en su hogar?',
+    'householdSize.hint': 'Cuéntese a usted, a su esposo, esposa o pareja, y a cualquier persona que declare como dependiente.',
+    'householdSize.placeholder': 'p. ej. 4',
+    'income.label': 'Ingresos del hogar en el año, antes de impuestos',
+    'income.placeholder': 'p. ej. 60,000',
+    'resident.legend': '¿Vive usted en Maryland?',
+    yes: 'Sí',
+    no: 'No',
+    'programs.legend': '¿Alguien en su hogar recibe alguno de estos?',
+    'programs.hint': 'Si vive en Maryland, cualquiera de estos significa que su atención debería ser gratis.',
+    snap: 'SNAP (cupones de alimentos)',
+    wic: 'WIC',
+    energyAssistance: 'Asistencia de Energía de Maryland',
+    schoolMeals: 'Un niño que recibe comidas escolares gratis o a precio reducido',
+    'optional.summary': 'Opcional: la fecha de su factura y sus gastos médicos',
+    'firstBillDate.label': '¿Cuándo recibió la primera factura del hospital?',
+    'firstBillDate.hint': 'Tiene 240 días desde esa fecha para solicitar.',
+    'medicalBills.label': 'Gastos médicos de su hogar en los últimos 12 meses',
+    'medicalBills.hint': 'Si sus ingresos están por encima del 300% del nivel de pobreza, gastos de más de una cuarta parte de sus ingresos todavía pueden darle un descuento.',
+    'medicalBills.placeholder': 'p. ej. 2,500',
+    'check.button': 'Revisar mi factura',
+    'apply.title': 'Llene la solicitud',
+    'apply.intro': 'Todos los hospitales de Maryland usan el mismo formulario de asistencia financiera. Agregue sus datos y esta página lo llena por usted, en su teléfono. La línea de la firma queda en blanco para que usted firme. Revise cada casilla antes de enviarlo.',
+    'applicantName.label': 'Su nombre completo',
+    'street.label': 'Dirección',
+    'unit.label': 'Apartamento o unidad',
+    'city.label': 'Ciudad',
+    'zip.label': 'Código postal',
+    'phone.label': 'Número de teléfono',
+    'phone.placeholder': 'p. ej. 240-555-1234',
+    'members.legend': 'Personas en su hogar',
+    'members.hint': 'Usted es la primera fila. El formulario tiene espacio para siete personas.',
+    'apply.button': 'Descargar la solicitud llena (PDF)',
+    'apply.note': 'Nada de lo que escriba se envía a ningún lado. El PDF se crea en su dispositivo. Envíelo a la oficina de asistencia financiera del hospital, que aparece en su factura.',
+    'footer.law': 'Basado en Maryland Health-General 19-214.1, COMAR 10.37.13.06 y las pautas federales de pobreza de 2026. Funciona completamente en su navegador. Es una guía, no un consejo legal.',
+    'footer.made': 'Hecho por Ayush Kadigari, estudiante de la Universidad de Maryland, no un hospital ni un abogado. Preguntas o una respuesta equivocada:',
+  }),
+});
+
+// Text the script builds itself (member rows, overflow note, failure messages).
+export const UI = Object.freeze({
+  en: Object.freeze({
+    yourName: 'Your name',
+    personName: (n) => `Person ${n} name`,
+    age: 'Age',
+    relationship: 'Relationship to you',
+    self: 'Self',
+    relationshipExample: 'e.g. Child',
+    overflow: (max) => `The form has room for ${max} people. List the rest on a separate sheet.`,
+    applyFailed: 'The form could not be filled in. Reload the page and try again, or download the blank form from the hospital.',
+    basedOn: 'Based on ',
+    whatToBring: 'What to bring',
+    goodToKnow: 'Good to know',
+  }),
+  es: Object.freeze({
+    yourName: 'Su nombre',
+    personName: (n) => `Nombre de la persona ${n}`,
+    age: 'Edad',
+    relationship: 'Parentesco con usted',
+    self: 'Self',
+    relationshipExample: 'p. ej. Hijo',
+    overflow: (max) => `El formulario tiene espacio para ${max} personas. Anote a las demás en una hoja aparte.`,
+    applyFailed: 'No se pudo llenar el formulario. Recargue la página e intente de nuevo, o descargue el formulario en blanco del hospital.',
+    basedOn: 'Basado en ',
+    whatToBring: 'Qué llevar',
+    goodToKnow: 'Bueno saber',
+  }),
+});
+
+// The form checks answers in English. These are the same messages in Spanish.
+export const ERRORS_ES = Object.freeze({
+  'Enter an amount like 60,000.': 'Escriba una cantidad como 60,000.',
+  'Enter your household income before taxes.': 'Escriba los ingresos de su hogar antes de impuestos.',
+  'Enter how many people live in your household, from 1 to 20.': 'Escriba cuántas personas viven en su hogar, de 1 a 20.',
+  'Pick yes or no.': 'Elija sí o no.',
+  'Finish typing the date, or clear it.': 'Termine de escribir la fecha, o bórrela.',
+  "The first bill date can't be in the future.": 'La fecha de la primera factura no puede estar en el futuro.',
+  'Dates must look like 2026-09-26.': 'Las fechas deben verse así: 2026-09-26.',
+  'That date does not exist.': 'Esa fecha no existe.',
+  'Something went wrong with those answers. Check them and try again.': 'Algo salió mal con esas respuestas. Revíselas e intente de nuevo.',
+});
+
+const PROGRAM_NAMES = Object.freeze({
+  en: Object.freeze({ snap: 'SNAP', wic: 'WIC', energyAssistance: 'Maryland Energy Assistance', schoolMeals: 'free or reduced-price school meals' }),
+  es: Object.freeze({ snap: 'SNAP', wic: 'WIC', energyAssistance: 'Asistencia de Energía de Maryland', schoolMeals: 'comidas escolares gratis o a precio reducido' }),
+});
+
+function joinEn(names) {
+  if (names.length <= 2) return names.join(' and ');
+  return `${names.slice(0, -1).join(', ')}, and ${names.at(-1)}`;
+}
+
+function joinEs(names) {
+  if (names.length <= 1) return names.join('');
+  return `${names.slice(0, -1).join(', ')} y ${names.at(-1)}`;
+}
+
+// Sentences for the result. Each function gets the already formatted pieces.
+export const RESULT = Object.freeze({
+  en: Object.freeze({
+    locale: 'en-US',
+    programs: (keys) => joinEn(keys.map((key) => PROGRAM_NAMES.en[key])),
+    stamp: { free: 'FREE', reduced: (discount) => `${discount}% OFF`, notCovered: 'NOT COVERED', askAnyway: 'ASK ANYWAY' },
+    headline: {
+      free: 'Your care should be free.',
+      reduced: (discount) => `Your bill should be cut by ${discount}%.`,
+      hardshipPossible: 'You may qualify for 35% to 50% off if your medical bills are high.',
+      notRequired: "Maryland law doesn't require a discount at your income. Ask anyway.",
+      notCovered: "Maryland's rule is for Maryland residents. Check the hospital's own policy.",
+    },
+    math: (income, percent, year, povertyLine, size) => `Your household income of ${income} is ${percent} of the ${year} federal poverty line (${povertyLine} for a household of ${size}).`,
+    detail: {
+      notCovered: (math) => `Maryland's free and reduced-cost care rules cover Maryland residents. Many hospitals still help other patients through their own financial assistance policy. ${math}`,
+      programs: (names, math) => `Because you get ${names}, you automatically qualify for free care, whatever your income. ${math}`,
+      free: (math) => `${math} At or below 200%, Maryland hospitals have to give medically necessary care for free.`,
+      reducedHardship: (math) => `${math} Because your medical bills from the last 12 months are more than 25% of your income, Maryland hospitals have to cut what you owe.`,
+      reduced: (math) => `${math} Between 200% and 300%, Maryland hospitals have to cut what you owe.`,
+      noHardship: (math) => `${math} Your medical bills from the last 12 months are not more than 25% of your income, so the hardship discount doesn't apply.`,
+      maybeHardship: (math) => `${math} If your medical bills from the last 12 months are more than 25% of your income, you may qualify for a hardship discount of 35% to 50%.`,
+      above: (math) => `${math} Above 500%, the state rule doesn't require a discount, but many hospitals have their own programs.`,
+    },
+    deadline: {
+      none: (days) => `You have ${days} days from your first bill to apply.`,
+      closed: (days) => `It's been more than ${days} days since your first bill. Ask the hospital anyway, some still help.`,
+      today: 'Today is the last day to apply.',
+      left: (daysLeft, date) => `You have ${daysLeft === 1 ? '1 day' : `${daysLeft} days`} left to apply. The deadline is ${date}.`,
+    },
+    bring: ["Proof of income, like pay stubs or last year's tax return", 'Something that shows who lives in your household', 'Your hospital bill'],
+    proof: (names) => `Proof you get ${names}`,
+    notes: [
+      'This is an estimate. The hospital makes the final decision.',
+      'Hospitals can be more generous than this.',
+      'Some hospitals also look at your savings.',
+      'Every Maryland hospital uses the same financial assistance application.',
+      'This is a guide, not legal advice.',
+    ],
+    sourceLabels: ['Maryland Health-General § 19-214.1', 'COMAR 10.37.13.06', 'HHS 2026 poverty guidelines'],
+  }),
+  es: Object.freeze({
+    locale: 'es-US',
+    programs: (keys) => joinEs(keys.map((key) => PROGRAM_NAMES.es[key])),
+    stamp: { free: 'GRATIS', reduced: (discount) => `${discount}% MENOS`, notCovered: 'NO CUBIERTO', askAnyway: 'PREGUNTE IGUAL' },
+    headline: {
+      free: 'Su atención debería ser gratis.',
+      reduced: (discount) => `Su factura debería bajar un ${discount}%.`,
+      hardshipPossible: 'Podría calificar para un 35% a 50% de descuento si sus gastos médicos son altos.',
+      notRequired: 'La ley de Maryland no exige un descuento con sus ingresos. Pregunte de todos modos.',
+      notCovered: 'La regla de Maryland es para residentes de Maryland. Revise la política del hospital.',
+    },
+    math: (income, percent, year, povertyLine, size) => `Los ingresos de su hogar, ${income}, son el ${percent} del nivel federal de pobreza de ${year} (${povertyLine} para un hogar de ${size}).`,
+    detail: {
+      notCovered: (math) => `Las reglas de Maryland sobre atención gratis o a costo reducido cubren a los residentes de Maryland. Muchos hospitales igual ayudan a otros pacientes con su propia política de asistencia financiera. ${math}`,
+      programs: (names, math) => `Como usted recibe ${names}, califica automáticamente para atención gratis, sin importar sus ingresos. ${math}`,
+      free: (math) => `${math} Hasta el 200%, los hospitales de Maryland tienen que dar gratis la atención médicamente necesaria.`,
+      reducedHardship: (math) => `${math} Como sus gastos médicos de los últimos 12 meses superan el 25% de sus ingresos, los hospitales de Maryland tienen que reducir lo que usted debe.`,
+      reduced: (math) => `${math} Entre el 200% y el 300%, los hospitales de Maryland tienen que reducir lo que usted debe.`,
+      noHardship: (math) => `${math} Sus gastos médicos de los últimos 12 meses no superan el 25% de sus ingresos, así que el descuento por dificultad económica no aplica.`,
+      maybeHardship: (math) => `${math} Si sus gastos médicos de los últimos 12 meses superan el 25% de sus ingresos, podría calificar para un descuento por dificultad económica del 35% al 50%.`,
+      above: (math) => `${math} Por encima del 500%, la regla estatal no exige un descuento, pero muchos hospitales tienen sus propios programas.`,
+    },
+    deadline: {
+      none: (days) => `Tiene ${days} días desde su primera factura para solicitar.`,
+      closed: (days) => `Han pasado más de ${days} días desde su primera factura. Pregunte en el hospital de todos modos; algunos todavía ayudan.`,
+      today: 'Hoy es el último día para solicitar.',
+      left: (daysLeft, date) => `Le queda${daysLeft === 1 ? ' 1 día' : `n ${daysLeft} días`} para solicitar. La fecha límite es el ${date}.`,
+    },
+    bring: ['Comprobante de ingresos, como talones de pago o la declaración de impuestos del año pasado', 'Algo que muestre quiénes viven en su hogar', 'Su factura del hospital'],
+    proof: (names) => `Comprobante de que recibe ${names}`,
+    notes: [
+      'Esto es un estimado. El hospital toma la decisión final.',
+      'Los hospitales pueden ser más generosos que esto.',
+      'Algunos hospitales también miran sus ahorros.',
+      'Todos los hospitales de Maryland usan la misma solicitud de asistencia financiera.',
+      'Esto es una guía, no un consejo legal.',
+    ],
+    sourceLabels: ['Maryland Health-General § 19-214.1', 'COMAR 10.37.13.06', 'Pautas federales de pobreza 2026 (HHS)'],
+  }),
+});

@@ -97,3 +97,24 @@ test('every result has a short stamp for the page to print across it', () => {
   assert.equal(view({ income: 200000 }).stamp, 'ASK ANYWAY');
   assert.equal(view({ isMarylandResident: false }).stamp, 'NOT COVERED');
 });
+
+test('the same result reads in Spanish', () => {
+  const es = (overrides = {}) => describeResult(checkEligibility({
+    householdSize: 4, income: 60000, isMarylandResident: true, programs: {},
+    firstBillDate: null, medicalBillsLast12Months: null, ...overrides,
+  }, TODAY), 'es');
+  assert.equal(es().headline, 'Su atención debería ser gratis.');
+  assert.equal(es().stamp, 'GRATIS');
+  assert.equal(es().detail,
+    'Los ingresos de su hogar, $60,000, son el 181.9% del nivel federal de pobreza de 2026 ($33,000 para un hogar de 4). '
+    + 'Hasta el 200%, los hospitales de Maryland tienen que dar gratis la atención médicamente necesaria.');
+  assert.equal(es({ income: 70000 }).headline, 'Su factura debería bajar un 75%.');
+  assert.equal(es({ income: 70000 }).stamp, '75% MENOS');
+  assert.equal(es({ isMarylandResident: false }).stamp, 'NO CUBIERTO');
+  assert.equal(es().deadlineText, 'Tiene 240 días desde su primera factura para solicitar.');
+  assert.match(es({ firstBillDate: '2026-09-01' }).deadlineText, /^Le quedan \d+ días para solicitar\. La fecha límite es el \d+ de \w+ de 2027\.$/);
+  assert.equal(es({ programs: { snap: true, wic: true } }).bring.at(-1), 'Comprobante de que recibe SNAP y WIC');
+  assert.ok(es().notes.includes('Esto es un estimado. El hospital toma la decisión final.'));
+  assert.equal(es().sources[2].label, 'Pautas federales de pobreza 2026 (HHS)');
+  assert.equal(es().sources[0].url, view().sources[0].url);
+});

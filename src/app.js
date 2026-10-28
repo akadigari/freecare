@@ -1,7 +1,10 @@
 import { runCheck } from './check.js';
 import { PROGRAM_KEYS } from './rules.js';
 import { todayIso } from './dates.js';
+import { describe } from './present.js';
 import { fillApplication, FORM, MAX_MEMBERS } from './apply.js';
+import { applyLanguage, pickLanguage, textFor, translateError } from './i18n.js';
+import { UI } from './strings.js';
 import { PDFDocument } from '../vendor/pdf-lib/pdf-lib.esm.min.js';
 
 const form = document.getElementById('check-form');
@@ -12,8 +15,21 @@ const applySection = document.getElementById('apply');
 const applyForm = document.getElementById('apply-form');
 const applyError = document.getElementById('apply-error');
 const membersBox = document.getElementById('members');
-let lastResult = null;
+const langToggle = document.getElementById('lang-toggle');
 const FIELDS_WITH_ERRORS = Object.freeze(['householdSize', 'income', 'resident', 'firstBillDate', 'medicalBills']);
+const LANG_KEY = 'freecare-lang';
+
+let lastResult = null;
+let lang = 'en';
+
+// Browser storage is a convenience only; the page works without it.
+function savedLanguage() {
+  try { return localStorage.getItem(LANG_KEY); } catch { return null; }
+}
+
+function rememberLanguage(next) {
+  try { localStorage.setItem(LANG_KEY, next); } catch { /* private window or storage off */ }
+}
 
 function readFields(formElement) {
   const data = new FormData(formElement);
@@ -34,19 +50,19 @@ function showFieldErrors(errors) {
   for (const name of FIELDS_WITH_ERRORS) {
     const message = errors[name] ?? '';
     const slot = form.querySelector(`[data-error-for="${name}"]`);
-    slot.textContent = message;
+    slot.textContent = translateError(message, lang);
     slot.hidden = message === '';
-    form.querySelectorAll(`[name="${name}"]`).forEach((input) => {
-      input.setAttribute('aria-invalid', message ? 'true' : 'false');
-    });
+    for (const input of form.querySelectorAll(`[name="${name}"]`)) {
+      if (message) input.setAttribute('aria-invalid', 'true');
+      else input.removeAttribute('aria-invalid');
+    }
   }
   const firstBad = FIELDS_WITH_ERRORS.find((name) => errors[name]);
-  if (firstBad === 'firstBillDate' || firstBad === 'medicalBills') form.querySelector('details').open = true;
   if (firstBad) form.querySelector(`[name="${firstBad}"]`).focus();
 }
 
 function showFormError(message) {
-  formError.textContent = message;
+  formError.textContent = translateError(message, lang);
   formError.hidden = message === '';
 }
 
@@ -69,7 +85,7 @@ function bulletList(items) {
 }
 
 function sourceLine(sources) {
-  const line = element('p', 'Based on ', 'verdict__sources');
+  const line = element('p', UI[lang].basedOn, 'verdict__sources');
   sources.forEach((source, index) => {
     const link = element('a', source.label);
     link.href = source.url;
@@ -80,7 +96,7 @@ function sourceLine(sources) {
   return line;
 }
 
-function renderResult(result, view) {
+function renderResult(result, view, { focus = true } = {}) {
   const card = element('article', null, `verdict verdict--${result.tier}`);
   const headline = element('h2', view.headline, 'verdict__headline');
   headline.tabIndex = -1;
@@ -92,15 +108,15 @@ function renderResult(result, view) {
     headline,
     element('p', view.detail, 'verdict__detail'),
     element('p', view.deadlineText, 'verdict__deadline'),
-    element('h3', 'What to bring'),
+    element('h3', UI[lang].whatToBring),
     bulletList(view.bring),
-    element('h3', 'Good to know'),
+    element('h3', UI[lang].goodToKnow),
     bulletList(view.notes),
     sourceLine(view.sources),
   );
   resultRegion.replaceChildren(card);
   resultRegion.hidden = false;
-  headline.focus();
+  if (focus) headline.focus();
 }
 
 // One row per person: name, age, relationship. Row one is the applicant.
@@ -111,6 +127,7 @@ function memberRow(index) {
     const id = `member-${index}-${key}`;
     const label = element('label', labelText);
     label.htmlFor = id;
+    label.dataset.memberLabel = key;
     const input = element('input');
     input.id = id;
     input.name = `${key}-${index}`;
@@ -118,21 +135,32 @@ function memberRow(index) {
     wrap.append(label, input);
     return wrap;
   };
+  const T = UI[lang];
   row.append(
-    make('name', index === 0 ? 'Your name' : `Person ${index + 1} name`),
-    make('age', 'Age', { inputMode: 'numeric' }),
-    make('relationship', 'Relationship to you', { value: index === 0 ? 'Self' : '', placeholder: index === 0 ? '' : 'e.g. Child' }),
+    make('name', index === 0 ? T.yourName : T.personName(index + 1)),
+    make('age', T.age, { inputMode: 'numeric' }),
+    make('relationship', T.relationship, { value: index === 0 ? T.self : '', placeholder: index === 0 ? '' : T.relationshipExample }),
   );
   return row;
+}
+
+// Switching language must not throw away names already typed, so rows are relabeled in place.
+function relabelMembers() {
+  const T = UI[lang];
+  membersBox.querySelectorAll('.member').forEach((row, index) => {
+    row.querySelector('[data-member-label="name"]').textContent = index === 0 ? T.yourName : T.personName(index + 1);
+    row.querySelector('[data-member-label="age"]').textContent = T.age;
+    row.querySelector('[data-member-label="relationship"]').textContent = T.relationship;
+  });
+  const note = membersBox.querySelector('.hint');
+  if (note) note.textContent = T.overflow(MAX_MEMBERS);
 }
 
 function showApply(result) {
   lastResult = result;
   const count = Math.min(result.householdSize, MAX_MEMBERS);
   membersBox.replaceChildren(...Array.from({ length: count }, (_, i) => memberRow(i)));
-  if (result.householdSize > MAX_MEMBERS) {
-    membersBox.append(element('p', `The form has room for ${MAX_MEMBERS} people. List the rest on a separate sheet.`, 'hint'));
-  }
+  if (result.householdSize > MAX_MEMBERS) membersBox.append(element('p', UI[lang].overflow(MAX_MEMBERS), 'hint'));
   applySection.hidden = false;
 }
 
@@ -155,6 +183,19 @@ function download(bytes) {
   link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
+
+function setLanguage(next) {
+  lang = next;
+  applyLanguage(document, lang);
+  document.title = textFor(lang, 'title');
+  rememberLanguage(lang);
+  if (lastResult) {
+    renderResult(lastResult, describe(lastResult, lang), { focus: false });
+    relabelMembers();
+  }
+}
+
+langToggle.addEventListener('click', () => setLanguage(lang === 'en' ? 'es' : 'en'));
 
 applyForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -179,15 +220,15 @@ applyForm.addEventListener('submit', async (event) => {
     if (!response.ok) throw new Error(`form fetch ${response.status}`);
     const bytes = await fillApplication(new Uint8Array(await response.arrayBuffer()), answers, PDFDocument);
     download(bytes);
-  } catch (error) {
-    applyError.textContent = 'The form could not be filled in. Reload the page and try again, or download the blank form from the hospital.';
+  } catch {
+    applyError.textContent = UI[lang].applyFailed;
     applyError.hidden = false;
   }
 });
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const outcome = runCheck(readFields(form), todayIso());
+  const outcome = runCheck(readFields(form), todayIso(), { describe: (result) => describe(result, lang) });
   showFieldErrors(outcome.status === 'invalid' ? outcome.errors : {});
   showFormError(outcome.status === 'failed' ? outcome.message : '');
   if (outcome.status === 'ok') {
@@ -198,6 +239,8 @@ form.addEventListener('submit', (event) => {
   clearResult();
   applySection.hidden = true;
 });
+
+setLanguage(pickLanguage(savedLanguage(), navigator.language));
 
 // The button starts off in the HTML so the form can't submit without this script.
 button.disabled = false;

@@ -235,3 +235,17 @@ input[aria-invalid="true"] { border-bottom-color: var(--error); }
 .member { display: grid; grid-template-columns: 2fr 1fr 1.4fr; gap: 0.75rem; align-items: end; }
 .member label { font-size: 0.85rem; color: var(--muted); display: block; }
 @media (max-width: 480px) { .member { grid-template-columns: 1fr; gap: 0.4rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--row); } }
+
+/* Language switch, top right of the sheet, styled like a small printed tab. */
+.lang {
+  float: right;
+  margin: -0.25rem 0 0.5rem 1rem;
+  font: 600 0.9rem/1 var(--serif);
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+}
+.lang:hover { background: var(--ink); color: var(--paper); }
