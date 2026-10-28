@@ -48,13 +48,23 @@ test('after the result, the page can fill the state application without leaving 
   assert.match(html, /id="apply-button"/);
   assert.match(html, /The signature line stays blank/);
   assert.match(app, /from '\.\/apply\.js'/);
-  assert.match(app, /from '\.\.\/vendor\/pdf-lib\/pdf-lib\.esm\.min\.js'/);
+  assert.match(app, /import\('\.\.\/vendor\/pdf-lib\/pdf-lib\.esm\.min\.js'\)/, 'pdf-lib loads only when someone fills the application');
+  assert.doesNotMatch(app, /from '\.\.\/vendor\/pdf-lib/, 'no eager import of the 523 KB library');
   assert.match(app, /fetch\(FORM\.file\)/);
+});
+
+test('the application asks about Medicaid and large assets', () => {
+  assert.match(html, /name="medicaid" value="yes"/);
+  assert.match(html, /name="medicaid" value="no"/);
+  assert.match(html, /name="medicaidDate"/);
+  assert.match(html, /name="medicaidDetermination"/);
+  assert.match(html, /name="assets"/);
 });
 
 test('the page loads only its own files', () => {
   const imports = app.match(/from '([^']+)'/g) || [];
   for (const line of imports) assert.match(line, /from '\.{1,2}\//, line);
+  for (const line of app.match(/import\('([^']+)'\)/g) || []) assert.match(line, /import\('\.{1,2}\//, line);
   assert.doesNotMatch(html, /https?:\/\/[^"']+\.(js|css)/);
   assert.doesNotMatch(app, /https?:\/\//);
 });
@@ -70,4 +80,15 @@ test('the page can switch to Spanish', () => {
   assert.match(app, /from '\.\/i18n\.js'/);
   assert.match(app, /applyLanguage\(/);
   assert.doesNotMatch(html, /data-i18n="[^"]*"[^>]*>[^<]*<a /, 'a marked element must not contain a link');
+});
+
+test('a result can be printed and its deadline saved to a calendar', () => {
+  const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /@media print/);
+  assert.match(css, /@media print[\s\S]*\.check\b[\s\S]*display: none/);
+  assert.match(css, /@media print[\s\S]*\.apply\b[\s\S]*display: none/);
+  assert.match(app, /verdict__actions/);
+  assert.match(app, /window\.print\(\)/);
+  assert.match(app, /from '\.\/calendar\.js'/);
+  assert.match(app, /CALENDAR_FILE/);
 });

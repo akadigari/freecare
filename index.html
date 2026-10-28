@@ -111,6 +111,27 @@
           <input id="phone" name="phone" inputmode="tel" autocomplete="tel" data-i18n-placeholder="phone.placeholder" placeholder="e.g. 240-555-1234">
         </div>
         <fieldset class="field">
+          <legend data-i18n="medicaid.legend">Have you applied for Maryland Medical Assistance (Medicaid)?</legend>
+          <p class="hint" id="medicaid-hint" data-i18n="medicaid.hint">The hospital asks. If you have not, you can leave it blank.</p>
+          <div class="choices choices--inline">
+            <label class="choice"><input type="radio" name="medicaid" value="yes" aria-describedby="medicaid-hint"> <span data-i18n="yes">Yes</span></label>
+            <label class="choice"><input type="radio" name="medicaid" value="no" aria-describedby="medicaid-hint"> <span data-i18n="no">No</span></label>
+          </div>
+          <div class="field field--short">
+            <label for="medicaidDate" data-i18n="medicaidDate.label">When did you apply?</label>
+            <input id="medicaidDate" name="medicaidDate" type="date">
+          </div>
+          <div class="field">
+            <label for="medicaidDetermination" data-i18n="medicaidDetermination.label">What did they decide?</label>
+            <input id="medicaidDetermination" name="medicaidDetermination" data-i18n-placeholder="medicaidDetermination.placeholder" placeholder="e.g. Approved, Denied, Still waiting">
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="assets" data-i18n="assets.label">Money in the bank, if more than $100,000</label>
+          <p class="hint" id="assets-hint" data-i18n="assets.hint">Optional. Cash, bank accounts and investments only. Do not count retirement accounts. Leave blank if under $100,000.</p>
+          <input id="assets" name="assets" inputmode="decimal" autocomplete="off" aria-describedby="assets-hint">
+        </div>
+        <fieldset class="field">
           <legend data-i18n="members.legend">People in your household</legend>
           <p class="hint" id="members-hint" data-i18n="members.hint">You are the first row. The form has room for seven people.</p>
           <div id="members" class="members" aria-describedby="members-hint"></div>

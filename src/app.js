@@ -6,7 +6,6 @@ import { fillApplication, FORM, MAX_MEMBERS } from './apply.js';
 import { applyLanguage, pickLanguage, textFor, translateError } from './i18n.js';
 import { UI } from './strings.js';
 import { HOSPITALS, hospitalById } from './hospitals.js';
-import { PDFDocument } from '../vendor/pdf-lib/pdf-lib.esm.min.js';
 
 const form = document.getElementById('check-form');
 const button = form.querySelector('.check__button');
@@ -243,10 +242,15 @@ applyForm.addEventListener('submit', async (event) => {
     income: lastResult.income,
     isMarylandResident: lastResult.tier !== 'not_covered',
     medicalBillsLast12Months: lastResult.medicalBillsLast12Months,
+    medicaid: data.get('medicaid'),
+    medicaidDate: data.get('medicaidDate'),
+    medicaidDetermination: data.get('medicaidDetermination'),
+    assets: String(data.get('assets') ?? '').replace(/[\s$,]/g, ''),
     todayIso: todayIso(),
   };
   try {
-    const response = await fetch(FORM.file);
+    // The PDF library is half a megabyte, so it loads only when someone gets this far.
+    const [{ PDFDocument }, response] = await Promise.all([import('../vendor/pdf-lib/pdf-lib.esm.min.js'), fetch(FORM.file)]);
     if (!response.ok) throw new Error(`form fetch ${response.status}`);
     const bytes = await fillApplication(new Uint8Array(await response.arrayBuffer()), answers, PDFDocument);
     download(bytes);

@@ -76,6 +76,21 @@ test('unpaid hospital bills turn on the hardship section', () => {
   assert.equal(text['Out of pocket expenses'], '$2,500');
 });
 
+test('Medicaid and assets answers land on page two, and silence leaves them blank', () => {
+  const asked = buildFieldValues(answers({ medicaid: 'yes', medicaidDate: '2026-08-15', medicaidDetermination: 'Denied, income too high', assets: 150000 }));
+  assert.equal(asked.choices['Maryland Medical Assistance'], 'yes');
+  assert.equal(asked.text['Medicaid date'], '08/15/2026');
+  assert.equal(asked.text['Application determination'], 'Denied, income too high');
+  assert.equal(asked.text.Assets, '$150,000');
+  const no = buildFieldValues(answers({ medicaid: 'no' }));
+  assert.equal(no.choices['Maryland Medical Assistance'], 'no');
+  assert.equal(no.text['Medicaid date'], '');
+  const silent = buildFieldValues(answers());
+  assert.equal(silent.choices['Maryland Medical Assistance'], null);
+  assert.equal(silent.text.Assets, '');
+  assert.equal(buildFieldValues(answers({ assets: 50000 })).text.Assets, '', 'the form only asks for assets over $100,000');
+});
+
 test('a non-resident leaves the residence question for the patient', () => {
   const { choices } = buildFieldValues(answers({ isMarylandResident: false }));
   assert.equal(choices['Primary Residence'], null);

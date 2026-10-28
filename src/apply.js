@@ -68,6 +68,10 @@ export function buildFieldValues(answers) {
   const bills = Number(answers.medicalBillsLast12Months);
   const hasHardship = Number.isFinite(bills) && bills > 0;
   const income = Number(answers.income);
+  const assets = Number(answers.assets);
+  // The form only asks for monetary assets above $100,000.
+  const assetsText = answers.assets !== '' && answers.assets != null && Number.isFinite(assets) && assets > 100000 ? money.format(assets) : '';
+  const medicaid = answers.medicaid === 'yes' || answers.medicaid === 'no' ? answers.medicaid : null;
   const text = Object.freeze({
     Name: clean(answers.name),
     'Street Address': clean(answers.street),
@@ -81,10 +85,10 @@ export function buildFieldValues(answers) {
     undefined_2: line,
     ...memberFields(members),
     fill_4: answers.income !== '' && answers.income != null && Number.isFinite(income) ? `${money.format(income)} per year` : '',
-    'Medicaid date': '',
-    'Application determination': '',
+    'Medicaid date': medicaid === 'yes' && /^\d{4}-\d{2}-\d{2}$/.test(String(answers.medicaidDate ?? '')) ? usDate(answers.medicaidDate) : '',
+    'Application determination': medicaid === 'yes' ? clean(answers.medicaidDetermination) : '',
     'Out of pocket expenses': hasHardship ? money.format(bills) : '',
-    Assets: '',
+    Assets: assetsText,
     'Applicant signature': '',
     Date: answers.todayIso ? usDate(answers.todayIso) : '',
     'Relationship to Patient': 'Self',
@@ -93,7 +97,7 @@ export function buildFieldValues(answers) {
     'Primary Residence': answers.isMarylandResident === true ? 'yes' : null,
     'MD resident 6 months': null,
     'Financial Hardship': hasHardship ? 'yes' : null,
-    'Maryland Medical Assistance': null,
+    'Maryland Medical Assistance': medicaid,
   });
   return Object.freeze({ text, choices, overflow: Math.max(0, members.length - MAX_MEMBERS) });
 }
