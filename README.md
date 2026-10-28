@@ -2,12 +2,13 @@
 
 Should your Maryland hospital bill be free? A one-page checker that answers in about a minute, using Maryland's own rules. It runs entirely in your browser: nothing you type is sent anywhere.
 
-## What it tells you
+## What it does today
 
-- Whether state law says your care should be free, 75% off, 60% off, or a hardship discount
-- Your household income as a percent of the federal poverty line
-- How many days you have left to apply (240 from the first bill)
-- What to bring, and which law the answer comes from
+- Tells you whether state law says your care should be free, 75% off, 60% off, or a hardship discount, and that the hospital makes the final decision
+- Shows your household income as a percent of the federal poverty line
+- Counts the days you have left to apply (240 from the first bill)
+- Lists what to bring, and which law the answer comes from
+- Fills in Maryland's statewide financial assistance application for you. Every Maryland hospital uses the same form (revised March 6, 2026). You add your name, address, phone and household members; the page puts those and your income, residency and hardship answers into the state's own PDF and downloads it. The signature line stays blank for you to sign. The PDF is built on your device with pdf-lib; the page fetches only its own copy of the form.
 
 ## The rules
 
@@ -28,7 +29,7 @@ Sources: [Maryland Health-General 19-214.1](https://mgaleg.maryland.gov/mgawebsi
 ## Run it
 
 ```
-npm test                      # 53 tests, Node 22, no dependencies
+npm test                      # 65 tests, Node 22, no dependencies to install
 python3 -m http.server 8780   # then open http://localhost:8780
 ```
 
@@ -42,8 +43,11 @@ python3 -m http.server 8780   # then open http://localhost:8780
 | `src/form.js` | Turns what people type ("$60,000") into clean input |
 | `src/present.js` | Plain-English results |
 | `src/check.js` | Runs a check from form fields to result, and turns any unexpected error into a clear message |
+| `src/apply.js` | Maps the answers onto the state form's fields and fills the PDF. The yes or no questions are radio groups; the left box is Yes |
+| `forms/` | The blank state form, downloaded from a Maryland hospital's copy of the HSCRC form, revised 2026-03-06 |
+| `vendor/pdf-lib/` | pdf-lib 1.17.1 (MIT), used to fill the form in the browser |
 | `src/app.js`, `index.html`, `src/styles.css` | The page. System fonts, no outside requests |
 
 ## Not in this version
 
-Reading a photo of the bill, picking a hospital and linking its policy, filling out Maryland's uniform application, other states, and putting it online.
+Spanish, picking a hospital and showing where to send the form, reading a photo of the bill, other states, and a public URL. The form filler does not ask about Medicaid or assets; those questions are left blank for you to answer on the PDF.
