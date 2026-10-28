@@ -249,3 +249,17 @@ input[aria-invalid="true"] { border-bottom-color: var(--error); }
   cursor: pointer;
 }
 .lang:hover { background: var(--ink); color: var(--paper); }
+
+/* The hospital picker is a fill-in blank like the rest, with the browser's own arrow. */
+select {
+  width: 100%;
+  max-width: 26rem;
+  font: 500 1rem/1.4 var(--serif);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--line);
+  border-radius: 0;
+  padding: 0.4rem 0.25rem;
+}
+select option { color: #000000; background: #ffffff; }

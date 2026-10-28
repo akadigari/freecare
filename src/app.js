@@ -5,6 +5,7 @@ import { describe } from './present.js';
 import { fillApplication, FORM, MAX_MEMBERS } from './apply.js';
 import { applyLanguage, pickLanguage, textFor, translateError } from './i18n.js';
 import { UI } from './strings.js';
+import { HOSPITALS, hospitalById } from './hospitals.js';
 import { PDFDocument } from '../vendor/pdf-lib/pdf-lib.esm.min.js';
 
 const form = document.getElementById('check-form');
@@ -16,6 +17,8 @@ const applyForm = document.getElementById('apply-form');
 const applyError = document.getElementById('apply-error');
 const membersBox = document.getElementById('members');
 const langToggle = document.getElementById('lang-toggle');
+const hospitalSelect = document.getElementById('hospital');
+const hospitalHelp = document.getElementById('hospital-help');
 const FIELDS_WITH_ERRORS = Object.freeze(['householdSize', 'income', 'resident', 'firstBillDate', 'medicalBills']);
 const LANG_KEY = 'freecare-lang';
 
@@ -184,11 +187,36 @@ function download(bytes) {
   setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
 
+// The hospital list is the state's. Picking one shows a link to that hospital's own policy.
+function fillHospitalList() {
+  for (const hospital of HOSPITALS) {
+    const option = element('option', hospital.name);
+    option.value = hospital.id;
+    hospitalSelect.append(option);
+  }
+}
+
+function renderHospitalHelp() {
+  const T = UI[lang];
+  const hospital = hospitalById(hospitalSelect.value);
+  hospitalHelp.replaceChildren();
+  if (!hospital) {
+    hospitalHelp.textContent = T.hospitalHint;
+    return;
+  }
+  const link = element('a', T.hospitalPolicyLink(hospital.name, T.policyKinds[hospital.policyKind]));
+  link.href = hospital.policyUrl;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  hospitalHelp.append(link, document.createTextNode(T.hospitalPolicyRest(hospital.fileType)));
+}
+
 function setLanguage(next) {
   lang = next;
   applyLanguage(document, lang);
   document.title = textFor(lang, 'title');
   rememberLanguage(lang);
+  renderHospitalHelp();
   if (lastResult) {
     renderResult(lastResult, describe(lastResult, lang), { focus: false });
     relabelMembers();
@@ -196,6 +224,8 @@ function setLanguage(next) {
 }
 
 langToggle.addEventListener('click', () => setLanguage(lang === 'en' ? 'es' : 'en'));
+hospitalSelect.addEventListener('change', renderHospitalHelp);
+fillHospitalList();
 
 applyForm.addEventListener('submit', async (event) => {
   event.preventDefault();
