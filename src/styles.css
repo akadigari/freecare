@@ -281,7 +281,7 @@ select option { color: #000000; background: #ffffff; }
 @media print {
   body { background: #ffffff; color: #000000; font-size: 11pt; }
   main, .footer { max-width: none; margin: 0; padding: 0; box-shadow: none; background: #ffffff; }
-  .lang, .check, .apply, .verdict__actions { display: none; }
+  .lang, .check, .apply, .rights, .verdict__actions { display: none; }
   .intro { border-bottom-color: #000000; }
   .intro__lede, .intro__privacy { display: none; }
   .result { margin: 1rem 0 0; }
@@ -296,7 +296,7 @@ select option { color: #000000; background: #ffffff; }
 .photo input[type="file"] { font: inherit; max-width: 100%; }
 .findings { list-style: none; margin: 0.5rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
 .findings li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
-.findings button {
+.findings button, .pay__out button {
   font: 600 0.9rem/1 var(--serif);
   color: var(--ink);
   background: transparent;
@@ -305,5 +305,17 @@ select option { color: #000000; background: #ffffff; }
   padding: 0.35rem 0.7rem;
   cursor: pointer;
 }
-.findings button:disabled { opacity: 0.6; cursor: default; }
+.findings button:disabled, .pay__out button:disabled { opacity: 0.6; cursor: default; }
 .findings small { color: var(--muted); font-family: var(--mono); font-size: 0.8rem; }
+
+.pay { padding: 0.5rem 0 0; border-bottom: 0; }
+.pay summary { font-size: 0.95rem; margin-bottom: 0.5rem; }
+.pay__row { display: flex; flex-wrap: wrap; gap: 0 1.5rem; }
+.pay .field { padding: 0.35rem 0; }
+.pay__out { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin: 0.25rem 0 0.5rem; font-weight: 700; }
+
+.rights { margin-top: 2.5rem; border-top: 3px double var(--rule); padding-top: 1.25rem; }
+.rights h2 { font-size: 1.5rem; margin: 0 0 0.5rem; }
+.rights ul { margin: 0 0 1rem; padding-left: 1.2rem; }
+.rights li { margin: 0 0 0.5rem; }
+.rights__source { color: var(--muted); font-size: 0.9rem; }

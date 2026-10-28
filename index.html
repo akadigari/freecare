@@ -28,6 +28,31 @@
         <label for="income" data-i18n="income.label">Household income for the year, before taxes</label>
         <input id="income" name="income" inputmode="decimal" autocomplete="off" aria-describedby="income-error" data-i18n-placeholder="income.placeholder" placeholder="e.g. 60,000">
         <p class="error" id="income-error" data-error-for="income" hidden></p>
+        <details class="optional pay">
+          <summary data-i18n="pay.summary">Not sure? Work it out from your pay</summary>
+          <p class="hint" id="pay-hint" data-i18n="pay.hint">Enter what you get paid and how often. If more than one person in your household works, add up the yearly figures.</p>
+          <div class="pay__row">
+            <div class="field field--short">
+              <label for="payAmount" data-i18n="pay.amount">How much you get paid</label>
+              <input id="payAmount" inputmode="decimal" autocomplete="off" aria-describedby="pay-hint" data-i18n-placeholder="pay.placeholder" placeholder="e.g. 18.50">
+            </div>
+            <div class="field field--short">
+              <label for="payPeriod" data-i18n="pay.period">How often</label>
+              <select id="payPeriod">
+                <option value="hour" data-i18n="pay.hour">Per hour</option>
+                <option value="week" data-i18n="pay.week">Per week</option>
+                <option value="twoWeeks" data-i18n="pay.twoWeeks">Every two weeks</option>
+                <option value="month" data-i18n="pay.month">Per month</option>
+                <option value="year" data-i18n="pay.year">Per year</option>
+              </select>
+            </div>
+            <div class="field field--short" id="pay-hours-field">
+              <label for="payHours" data-i18n="pay.hours">Hours a week</label>
+              <input id="payHours" inputmode="decimal" autocomplete="off" data-i18n-placeholder="payHours.placeholder" placeholder="e.g. 30">
+            </div>
+          </div>
+          <p class="pay__out" id="pay-out" hidden><span id="pay-yearly"></span> <button type="button" id="pay-use" data-i18n="pay.use">Use this</button></p>
+        </details>
       </div>
 
       <fieldset class="field">
@@ -148,6 +173,8 @@
         <p class="hint" data-i18n="apply.note">Nothing you type is sent anywhere. The PDF is made on your device. Send it to the hospital's financial assistance office, listed on your bill.</p>
       </form>
     </section>
+
+    <section id="rights" class="rights"></section>
   </main>
 
   <footer class="footer">

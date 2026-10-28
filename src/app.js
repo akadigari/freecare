@@ -9,6 +9,8 @@ import { HOSPITALS, hospitalById } from './hospitals.js';
 import { deadlineCalendar, CALENDAR_FILE } from './calendar.js';
 import { readBillImage } from './ocr.js';
 import { readBill } from './bill.js';
+import { yearlyIncome } from './income.js';
+import { rightsFor } from './rights.js';
 
 const form = document.getElementById('check-form');
 const button = form.querySelector('.check__button');
@@ -24,11 +26,21 @@ const hospitalHelp = document.getElementById('hospital-help');
 const billPhoto = document.getElementById('billPhoto');
 const photoStatus = document.getElementById('photo-status');
 const photoFindings = document.getElementById('photo-findings');
+const payAmount = document.getElementById('payAmount');
+const payPeriod = document.getElementById('payPeriod');
+const payHours = document.getElementById('payHours');
+const payHoursField = document.getElementById('pay-hours-field');
+const payOut = document.getElementById('pay-out');
+const payYearly = document.getElementById('pay-yearly');
+const payUse = document.getElementById('pay-use');
+const rightsSection = document.getElementById('rights');
+const wholeDollars = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 const FIELDS_WITH_ERRORS = Object.freeze(['householdSize', 'income', 'resident', 'firstBillDate', 'medicalBills']);
 const LANG_KEY = 'freecare-lang';
 
 let lastResult = null;
 let lang = 'en';
+let payFigure = null;
 
 // Browser storage is a convenience only; the page works without it.
 function savedLanguage() {
@@ -244,12 +256,59 @@ function renderHospitalHelp() {
   hospitalHelp.append(link, document.createTextNode(T.hospitalPolicyRest(hospital.fileType)));
 }
 
+// Pay helper: hourly, weekly or monthly pay becomes the yearly figure the income box wants.
+function updatePay() {
+  payHoursField.hidden = payPeriod.value !== 'hour';
+  payFigure = yearlyIncome({ amount: payAmount.value, period: payPeriod.value, hoursPerWeek: payHours.value });
+  payOut.hidden = payFigure === null;
+  if (payFigure !== null) payYearly.textContent = UI[lang].payYearly(wholeDollars.format(payFigure));
+}
+
+function usePay() {
+  if (payFigure === null) return;
+  form.elements.income.value = String(payFigure);
+  form.elements.income.focus();
+}
+
+[payAmount, payPeriod, payHours].forEach((node) => node.addEventListener('input', updatePay));
+payUse.addEventListener('click', usePay);
+// Enter inside the helper fills the income box instead of submitting a half-filled form.
+[payAmount, payHours].forEach((node) => node.addEventListener('keydown', (event) => {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  usePay();
+}));
+updatePay();
+
+function outsideLink(text, url) {
+  const link = element('a', text);
+  link.href = url;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  return link;
+}
+
+function renderRights() {
+  const R = rightsFor(lang);
+  const help = element('ul', null, 'rights__help');
+  R.help.forEach((link) => {
+    const item = element('li');
+    item.append(outsideLink(link.label, link.url));
+    help.append(item);
+  });
+  const source = element('p', null, 'rights__source');
+  source.append(document.createTextNode(R.source.before), outsideLink(R.source.label, R.source.url), document.createTextNode(R.source.after));
+  rightsSection.replaceChildren(element('h2', R.title), element('p', R.intro), bulletList(R.items), element('p', R.helpIntro), help, source);
+}
+
 function setLanguage(next) {
   lang = next;
   applyLanguage(document, lang);
   document.title = textFor(lang, 'title');
   rememberLanguage(lang);
   renderHospitalHelp();
+  renderRights();
+  updatePay();
   if (lastResult) {
     renderResult(lastResult, describe(lastResult, lang), { focus: false });
     relabelMembers();

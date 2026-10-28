@@ -15,6 +15,19 @@ export const PAGE = Object.freeze({
     'householdSize.placeholder': 'e.g. 4',
     'income.label': 'Household income for the year, before taxes',
     'income.placeholder': 'e.g. 60,000',
+    'pay.summary': 'Not sure? Work it out from your pay',
+    'pay.hint': 'Enter what you get paid and how often. If more than one person in your household works, add up the yearly figures.',
+    'pay.amount': 'How much you get paid',
+    'pay.placeholder': 'e.g. 18.50',
+    'pay.period': 'How often',
+    'pay.hour': 'Per hour',
+    'pay.week': 'Per week',
+    'pay.twoWeeks': 'Every two weeks',
+    'pay.month': 'Per month',
+    'pay.year': 'Per year',
+    'pay.hours': 'Hours a week',
+    'payHours.placeholder': 'e.g. 30',
+    'pay.use': 'Use this',
     'resident.legend': 'Do you live in Maryland?',
     yes: 'Yes',
     no: 'No',
@@ -68,6 +81,19 @@ export const PAGE = Object.freeze({
     'householdSize.placeholder': 'p. ej. 4',
     'income.label': 'Ingresos del hogar en el año, antes de impuestos',
     'income.placeholder': 'p. ej. 60,000',
+    'pay.summary': '¿No está seguro? Calcúlelo con su pago',
+    'pay.hint': 'Escriba cuánto le pagan y cada cuánto. Si más de una persona en su hogar trabaja, sume las cifras anuales.',
+    'pay.amount': 'Cuánto le pagan',
+    'pay.placeholder': 'p. ej. 18.50',
+    'pay.period': 'Cada cuánto',
+    'pay.hour': 'Por hora',
+    'pay.week': 'Por semana',
+    'pay.twoWeeks': 'Cada dos semanas',
+    'pay.month': 'Por mes',
+    'pay.year': 'Por año',
+    'pay.hours': 'Horas por semana',
+    'payHours.placeholder': 'p. ej. 30',
+    'pay.use': 'Usar esto',
     'resident.legend': '¿Vive usted en Maryland?',
     yes: 'Sí',
     no: 'No',
@@ -125,6 +151,7 @@ export const UI = Object.freeze({
     overflow: (max) => `The form has room for ${max} people. List the rest on a separate sheet.`,
     applyFailed: 'The form could not be filled in. Reload the page and try again, or download the blank form from the hospital.',
     basedOn: 'Based on ',
+    payYearly: (amount) => `About ${amount} a year.`,
     whatToBring: 'What to bring',
     goodToKnow: 'Good to know',
     photoReading: (pct) => `Reading the bill on this phone, ${pct}%. Nothing is uploaded.`,
@@ -153,6 +180,7 @@ export const UI = Object.freeze({
     overflow: (max) => `El formulario tiene espacio para ${max} personas. Anote a las demás en una hoja aparte.`,
     applyFailed: 'No se pudo llenar el formulario. Recargue la página e intente de nuevo, o descargue el formulario en blanco del hospital.',
     basedOn: 'Basado en ',
+    payYearly: (amount) => `Unos ${amount} al año.`,
     whatToBring: 'Qué llevar',
     goodToKnow: 'Bueno saber',
     photoReading: (pct) => `Leyendo la factura en este teléfono, ${pct}%. No se sube nada.`,
@@ -280,5 +308,62 @@ export const RESULT = Object.freeze({
       'Esto es una guía, no un consejo legal.',
     ],
     sourceLabels: ['Maryland Health-General § 19-214.1', 'COMAR 10.37.13.06', 'Pautas federales de pobreza 2026 (HHS)'],
+  }),
+});
+
+// What a hospital may not do to collect, from Health-General § 19-214.2. The subsection each
+// sentence rests on is noted so the next person can check it against the statute.
+export const RIGHTS = Object.freeze({
+  en: Object.freeze({
+    locale: 'en-US',
+    title: 'Already paid, or being chased for the bill?',
+    intro: 'Maryland law also limits what a hospital can do to collect. These rules apply to every Maryland hospital:',
+    items: [
+      // (c)(1)
+      'If you paid, then apply within 240 days of your first bill and the hospital finds you qualified for free care, it has to refund anything over $25 within 30 days of that decision.',
+      // (b)(5), (e)(2)
+      'For at least 240 days after your first bill, the hospital cannot sue you or report you to a credit bureau.',
+      // (b)(6)
+      'The hospital cannot sue you at all over a bill of $500 or less.',
+      // (f)(4), (b)(12)
+      'If you qualify for free or reduced-cost care, the hospital cannot garnish your wages, and it cannot charge interest before a court judgment.',
+      // (f)(1), (f)(2), (f)(3)
+      'No hospital can put a lien on your home or force its sale over a hospital bill, or have you arrested over one.',
+      // (f)(6), (h)(1), (h)(3)
+      'Before it can sue, the hospital has to check whether you qualify for free or reduced-cost care, and mail you a notice with an application at least 45 days ahead.',
+      // (d)(3)
+      'If you set up a payment plan, the monthly payment cannot be more than 5% of your monthly household income.',
+      // (b)(2), (l)
+      'The hospital cannot sell your debt, except to a group that will cancel it.',
+    ],
+    helpIntro: 'If a hospital breaks these rules, you can complain to the state or get free help:',
+    help: {
+      hscrc: 'File a complaint with the Health Services Cost Review Commission, the state agency over hospital bills',
+      heau: "Get free help from the Attorney General's Health Education and Advocacy Unit",
+    },
+    sourceBefore: 'Based on ',
+    sourceAfter: (date) => `, read on ${date}. A guide, not legal advice.`,
+  }),
+  es: Object.freeze({
+    locale: 'es-US',
+    title: '¿Ya pagó, o lo están persiguiendo por la factura?',
+    intro: 'La ley de Maryland también limita lo que un hospital puede hacer para cobrar. Estas reglas aplican a todos los hospitales de Maryland:',
+    items: [
+      'Si pagó, luego solicita dentro de los 240 días de su primera factura y el hospital decide que calificaba para atención gratis, tiene que devolverle todo lo que pase de $25 dentro de los 30 días de esa decisión.',
+      'Durante al menos 240 días después de su primera factura, el hospital no puede demandarlo ni reportarlo a una agencia de crédito.',
+      'El hospital no puede demandarlo por una factura de $500 o menos.',
+      'Si califica para atención gratis o a costo reducido, el hospital no puede embargar su salario ni cobrarle intereses antes de una sentencia judicial.',
+      'Ningún hospital puede poner un gravamen sobre su casa ni forzar su venta por una factura de hospital, ni hacer que lo arresten por una.',
+      'Antes de poder demandarlo, el hospital tiene que revisar si usted califica para atención gratis o a costo reducido, y enviarle por correo un aviso con una solicitud al menos 45 días antes.',
+      'Si acuerda un plan de pagos, el pago mensual no puede ser más del 5% de los ingresos mensuales de su hogar.',
+      'El hospital no puede vender su deuda, salvo a un grupo que la vaya a cancelar.',
+    ],
+    helpIntro: 'Si un hospital rompe estas reglas, puede quejarse ante el estado o recibir ayuda gratis:',
+    help: {
+      hscrc: 'Presente una queja ante la Health Services Cost Review Commission, la agencia estatal a cargo de las facturas de hospital',
+      heau: 'Reciba ayuda gratis de la Unidad de Educación y Defensa en Salud (HEAU) del Procurador General de Maryland',
+    },
+    sourceBefore: 'Basado en ',
+    sourceAfter: (date) => `, leído el ${date}. Es una guía, no un consejo legal.`,
   }),
 });

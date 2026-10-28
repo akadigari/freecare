@@ -106,3 +106,22 @@ test('a photo of the bill is read on the device, never uploaded', () => {
     assert.doesNotThrow(() => readFileSync(new URL(`../vendor/tesseract/${file}`, import.meta.url)), file);
   }
 });
+
+test('people who know their hourly or monthly pay can work out the yearly figure', () => {
+  assert.match(html, /<details class="optional pay">/);
+  assert.match(html, /id="payAmount"/);
+  assert.match(html, /<select id="payPeriod"/);
+  assert.match(html, /id="payHours"/);
+  assert.match(html, /id="pay-yearly"/);
+  assert.match(html, /id="pay-use"/);
+  assert.match(app, /from '\.\/income\.js'/);
+  assert.match(app, /yearlyIncome\(/);
+});
+
+test('the page tells people what a hospital cannot do to collect', () => {
+  assert.match(html, /<section id="rights" class="rights">/);
+  assert.match(app, /from '\.\/rights\.js'/);
+  assert.match(app, /rightsFor\(/);
+  const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.rights\b/);
+});
