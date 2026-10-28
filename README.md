@@ -8,6 +8,8 @@ Should your Maryland hospital bill be free? A one-page checker that answers in a
 - Shows your household income as a percent of the federal poverty line
 - Counts the days you have left to apply (240 from the first bill)
 - Lists what to bring, and which law the answer comes from
+- Works in English and Spanish. A switch at the top of the page changes every word, including the results and the error messages. The choice is remembered in your browser only.
+- Lets you pick your hospital (19 Maryland hospitals and health systems, from the state's own list) and links to that hospital's policy on the state's site, with a plain line on where to send the form.
 - Fills in Maryland's statewide financial assistance application for you. Every Maryland hospital uses the same form (revised March 6, 2026). You add your name, address, phone and household members; the page puts those and your income, residency and hardship answers into the state's own PDF and downloads it. The signature line stays blank for you to sign. The PDF is built on your device with pdf-lib; the page fetches only its own copy of the form.
 
 ## The rules
@@ -29,7 +31,7 @@ Sources: [Maryland Health-General 19-214.1](https://mgaleg.maryland.gov/mgawebsi
 ## Run it
 
 ```
-npm test                      # 65 tests, Node 22, no dependencies to install
+npm test                      # 80 tests, Node 22, no dependencies to install
 python3 -m http.server 8780   # then open http://localhost:8780
 ```
 
@@ -44,10 +46,12 @@ python3 -m http.server 8780   # then open http://localhost:8780
 | `src/present.js` | Plain-English results |
 | `src/check.js` | Runs a check from form fields to result, and turns any unexpected error into a clear message |
 | `src/apply.js` | Maps the answers onto the state form's fields and fills the PDF. The yes or no questions are radio groups; the left box is Yes |
+| `src/strings.js`, `src/i18n.js` | Every word on the page in English and Spanish, and the switch between them. The tests check that the English on the page matches the English in the strings file |
+| `src/hospitals.js` | The 19 hospitals and health systems with each one's policy link, read from HSCRC's Financial Assistance Policies page on 2026-10-28. No phone numbers on purpose |
 | `forms/` | The blank state form, downloaded from a Maryland hospital's copy of the HSCRC form, revised 2026-03-06 |
 | `vendor/pdf-lib/` | pdf-lib 1.17.1 (MIT), used to fill the form in the browser |
 | `src/app.js`, `index.html`, `src/styles.css` | The page. System fonts, no outside requests |
 
 ## Not in this version
 
-Spanish, picking a hospital and showing where to send the form, reading a photo of the bill, other states, and a public URL. The form filler does not ask about Medicaid or assets; those questions are left blank for you to answer on the PDF.
+Reading a photo of the bill, other states, hospital phone numbers, and a public URL. The form filler does not ask about Medicaid or assets; those questions are left blank for you to answer on the PDF. The filled form is the English state form even when the page is in Spanish; hospitals accept it either way.
