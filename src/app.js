@@ -128,6 +128,7 @@ function renderResult(result, view, { focus = true } = {}) {
     headline,
     element('p', view.detail, 'verdict__detail'),
     element('p', view.deadlineText, 'verdict__deadline'),
+    ...(view.hospitalText ? [element('h3', UI[lang].yourHospital), element('p', view.hospitalText, 'verdict__hospital')] : []),
     element('h3', UI[lang].whatToBring),
     bulletList(view.bring),
     element('h3', UI[lang].goodToKnow),
@@ -311,13 +312,16 @@ function setLanguage(next) {
   renderRights();
   updatePay();
   if (lastResult) {
-    renderResult(lastResult, describe(lastResult, lang), { focus: false });
+    renderResult(lastResult, describe(lastResult, lang, hospitalSelect.value), { focus: false });
     relabelMembers();
   }
 }
 
 langToggle.addEventListener('click', () => setLanguage(lang === 'en' ? 'es' : 'en'));
-hospitalSelect.addEventListener('change', renderHospitalHelp);
+hospitalSelect.addEventListener('change', () => {
+  renderHospitalHelp();
+  if (lastResult) renderResult(lastResult, describe(lastResult, lang, hospitalSelect.value), { focus: false });
+});
 fillHospitalList();
 
 function setPhotoStatus(text) {
@@ -413,7 +417,7 @@ applyForm.addEventListener('submit', async (event) => {
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const outcome = runCheck(readFields(form), todayIso(), { describe: (result) => describe(result, lang) });
+  const outcome = runCheck(readFields(form), todayIso(), { describe: (result) => describe(result, lang, hospitalSelect.value) });
   showFieldErrors(outcome.status === 'invalid' ? outcome.errors : {});
   showFormError(outcome.status === 'failed' ? outcome.message : '');
   if (outcome.status === 'ok') {

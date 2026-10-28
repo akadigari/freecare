@@ -21,6 +21,7 @@ const PRECACHE = [
   'src/i18n.js',
   'src/income.js',
   'src/ocr.js',
+  'src/policies.js',
   'src/poverty.js',
   'src/present.js',
   'src/rights.js',

@@ -40,7 +40,8 @@ test('no phone numbers are shipped, because a wrong one does harm', () => {
   }
 });
 
-test('the page has a hospital picker next to the application', () => {
-  assert.match(html, /<select id="hospital" name="hospital"/);
+test('the hospital picker sits with the optional questions, so the result can use it', () => {
+  assert.match(html, /<details class="optional">[\s\S]*?<select id="hospital" name="hospital"[\s\S]*?<\/details>/);
+  assert.doesNotMatch(html, /<form id="apply-form"[\s\S]*<select id="hospital"/);
   assert.match(html, /id="hospital-help"/);
 });

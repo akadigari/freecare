@@ -81,7 +81,14 @@
       </fieldset>
 
       <details class="optional">
-        <summary data-i18n="optional.summary">Optional: your bill date and medical bills</summary>
+        <summary data-i18n="optional.summary">Optional: your hospital, bill date and medical bills</summary>
+        <div class="field">
+          <label for="hospital" data-i18n="hospital.label">Which hospital sent the bill?</label>
+          <select id="hospital" name="hospital" aria-describedby="hospital-help">
+            <option value="" data-i18n="hospital.any">I'm not sure</option>
+          </select>
+          <p class="hint" id="hospital-help"></p>
+        </div>
         <div class="field photo">
           <label for="billPhoto" data-i18n="photo.label">Or take a photo of the bill</label>
           <p class="hint" id="billPhoto-hint" data-i18n="photo.hint">The page reads it on your phone to find the hospital, the bill date and the amount. Nothing is uploaded. You confirm each one.</p>
@@ -116,13 +123,6 @@
       <h2 data-i18n="apply.title">Fill out the application</h2>
       <p data-i18n="apply.intro">Every Maryland hospital uses the same financial assistance form. Add your details and this page fills it in for you, on your phone. The signature line stays blank for you to sign. Check every box before you send it.</p>
       <form id="apply-form" novalidate>
-        <div class="field">
-          <label for="hospital" data-i18n="hospital.label">Which hospital sent the bill?</label>
-          <select id="hospital" name="hospital" aria-describedby="hospital-help">
-            <option value="" data-i18n="hospital.any">I'm not sure</option>
-          </select>
-          <p class="hint" id="hospital-help"></p>
-        </div>
         <div class="field">
           <label for="applicantName" data-i18n="applicantName.label">Your full name</label>
           <input id="applicantName" name="applicantName" autocomplete="name">

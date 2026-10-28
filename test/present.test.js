@@ -98,6 +98,32 @@ test('every result has a short stamp for the page to print across it', () => {
   assert.equal(view({ isMarylandResident: false }).stamp, 'NOT COVERED');
 });
 
+test('a picked hospital adds one line, and takes the headline when it gives more', () => {
+  assert.equal(view().hospitalText, null);
+  const withView = (id, overrides = {}) => describeResult(checkEligibility({
+    householdSize: 4, income: 60000, isMarylandResident: true, programs: {},
+    firstBillDate: null, medicalBillsLast12Months: null, ...overrides,
+  }, TODAY), 'en', id);
+  const withHospital = (id, overrides = {}) => withView(id, overrides).hospitalText;
+  const gbmc = withView('gbmc', { income: 92000 });
+  assert.equal(gbmc.headline, 'At Greater Baltimore Medical Center (GBMC), your care should be free.');
+  assert.equal(gbmc.stamp, 'FREE');
+  assert.equal(gbmc.hospitalText,
+    "That is Greater Baltimore Medical Center (GBMC)'s own policy, dated October 2025, which goes further than the state rule. The state alone would cut your bill by 60%.");
+  const hopkins = withView('johns-hopkins', { income: 115000 });
+  assert.equal(hopkins.headline, 'At Johns Hopkins Medicine (Hopkins Hospital, Bayview, Howard County, Suburban), your bill should be cut by 35%.');
+  assert.equal(hopkins.stamp, '35% OFF');
+  assert.equal(hopkins.hospitalText,
+    "That is Johns Hopkins Medicine (Hopkins Hospital, Bayview, Howard County, Suburban)'s own policy, dated 2026, which goes further than the state rule. The state alone would not require a discount.");
+  assert.equal(withView('luminis').headline, 'Your care should be free.', 'the state headline stays when the hospital matches it');
+  assert.equal(withHospital('luminis'), 'Luminis Health (Anne Arundel Medical Center, Doctors Community)\'s own policy, dated July 2024, matches the state rule at your income.');
+  assert.equal(withHospital('sheppard-pratt'), "Sheppard Pratt's own policy matches the state rule at your income.");
+  assert.equal(withHospital('adventist', { income: 180000 }),
+    "Adventist HealthCare's own policy, dated April 30, 2025, promises some help up to 600% of the poverty line but does not say how much. Ask.");
+  assert.match(withHospital('upmc-western-maryland'), /^The state's copy of UPMC Western Maryland's policy has no income rules in it\./);
+  assert.equal(withHospital('nowhere-general'), null);
+});
+
 test('the same result reads in Spanish', () => {
   const es = (overrides = {}) => describeResult(checkEligibility({
     householdSize: 4, income: 60000, isMarylandResident: true, programs: {},
@@ -116,5 +142,10 @@ test('the same result reads in Spanish', () => {
   assert.equal(es({ programs: { snap: true, wic: true } }).bring.at(-1), 'Comprobante de que recibe SNAP y WIC');
   assert.match(es().notes[0], /^El hospital decide, no esta página\./);
   assert.equal(es().sources[2].label, 'Pautas federales de pobreza 2026 (HHS)');
+  const gbmcEs = describeResult(checkEligibility({ householdSize: 4, income: 92000, isMarylandResident: true, programs: {}, firstBillDate: null, medicalBillsLast12Months: null }, TODAY), 'es', 'gbmc');
+  assert.equal(gbmcEs.headline, 'En Greater Baltimore Medical Center (GBMC), su atención debería ser gratis.');
+  assert.equal(gbmcEs.stamp, 'GRATIS');
+  assert.equal(gbmcEs.hospitalText,
+    'Esa es la política propia de Greater Baltimore Medical Center (GBMC), con fecha octubre de 2025, que va más allá de la regla del estado. El estado por sí solo bajaría su factura un 60%.');
   assert.equal(es().sources[0].url, view().sources[0].url);
 });
