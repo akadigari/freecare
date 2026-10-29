@@ -31,6 +31,14 @@ test('the page has a whole-form error slot and uses the tested check', () => {
   assert.match(app, /validity\.badInput/);
 });
 
+test('the page links its own code and carries a link preview', () => {
+  assert.match(html, /<a href="https:\/\/github\.com\/akadigari\/freecare" data-i18n="footer\.code">/);
+  assert.match(html, /<meta property="og:title" content="Should your Maryland hospital bill be free\?">/);
+  assert.match(html, /<meta property="og:image" content="https:\/\/akadigari\.github\.io\/freecare\/docs\/screenshots\/result\.jpg">/);
+  assert.doesNotThrow(() => readFileSync(new URL('../LICENSE', import.meta.url)));
+  assert.doesNotThrow(() => readFileSync(new URL('../docs/screenshots/result.jpg', import.meta.url)));
+});
+
 test('the page says who made it and how to reach them', () => {
   assert.match(html, /I am Ayush Kadigari/);
   assert.match(html, /arkadigari@gmail\.com/);

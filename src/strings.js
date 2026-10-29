@@ -70,6 +70,7 @@ export const PAGE = Object.freeze({
     'apply.note': "Nothing you type is sent anywhere. The PDF is made on your device. Send it to the hospital's financial assistance office, listed on your bill.",
     'footer.law': 'Built on Maryland Health-General 19-214.1 and 19-214.2, COMAR 10.37.13.06 and the 2026 federal poverty guidelines. It runs in your browser and sends nothing anywhere. A guide, not legal advice.',
     'footer.made': 'I am Ayush Kadigari, a student at the University of Maryland, not a hospital and not a lawyer. If this gets something wrong, tell me:',
+    'footer.code': 'The code is public on GitHub, with 113 tests',
   }),
   es: Object.freeze({
     'lang.toggle': 'English',
@@ -136,6 +137,7 @@ export const PAGE = Object.freeze({
     'apply.note': 'Nada de lo que escriba se envía a ningún lado. El PDF se crea en su dispositivo. Envíelo a la oficina de asistencia financiera del hospital, que aparece en su factura.',
     'footer.law': 'Basado en Maryland Health-General 19-214.1 y 19-214.2, COMAR 10.37.13.06 y las pautas federales de pobreza de 2026. Funciona en su navegador y no envía nada a ningún lado. Es una guía, no un consejo legal.',
     'footer.made': 'Soy Ayush Kadigari, estudiante de la Universidad de Maryland, no un hospital ni un abogado. Si esto se equivoca en algo, dígamelo:',
+    'footer.code': 'El código es público en GitHub, con 113 pruebas',
   }),
 });
 

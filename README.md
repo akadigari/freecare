@@ -1,12 +1,30 @@
 # freecare
 
-Should your Maryland hospital bill be free? A one-page checker that answers in about a minute, using Maryland's own rules. It runs entirely in your browser: nothing you type is sent anywhere.
+Should your Maryland hospital bill be free? A one-page checker that answers in about a minute, using Maryland's own rules and your hospital's own policy, then fills the state application on your phone. It runs entirely in your browser: nothing you type is sent anywhere.
+
+Live: https://akadigari.github.io/freecare/
 
 <p align="center">
   <img src="docs/screenshots/questions.jpg" width="31%" alt="The four questions, numbered like a paper form">
   <img src="docs/screenshots/result.jpg" width="31%" alt="A result stamped FREE, with the hospital's own policy explained">
   <img src="docs/screenshots/rights.jpg" width="31%" alt="What the hospital can't do to you, in three situations">
 </p>
+
+## Why
+
+Maryland law makes hospitals write off bills for people at or below 200% of the poverty line and cut them up to 300%, and most of the people it covers never apply. Every hospital uses the same state form, and most hospital policies go past the state minimum. The gap is not the law, it is that nobody tells you, and the form is a chore. This page does both parts: it tells you, and it fills the form.
+
+## By the numbers
+
+| | |
+|---|---|
+| Tests | 113, run with Node's own test runner |
+| npm dependencies | 0 |
+| Outside requests from the page | 0, and a test proves it |
+| Hospital policies read and encoded | 19 of 19 on the state's list |
+| Fields filled on the state PDF | 43 |
+| Languages | English and Spanish, every word |
+| Files kept for offline use | 25 |
 
 ## What it does today
 
@@ -75,6 +93,28 @@ python3 -m http.server 8780   # then open http://localhost:8780
 | `vendor/tesseract/` | tesseract.js 7.0.0 and tesseract.js-core 7.0.0 (Apache-2.0), LSTM builds only, plus the fast English model from tessdata. Loads only when someone picks a photo |
 | `src/app.js`, `index.html`, `src/styles.css` | The page. System fonts, no outside requests |
 
+## Engineering notes
+
+- **No framework, no build step, no dependencies.** The browser runs the ES modules as written and Node's test runner runs the same files. A tool for someone on an old phone in a hospital basement needs to be small and boring, and a dependency that changes under you is neither.
+- **Nothing leaves the device, and a test says so.** The suite greps the page and the script for any outside URL. The PDF is filled with a vendored copy of pdf-lib. Text recognition is a vendored tesseract.js that loads only when a photo is picked. The service worker answers only for its own origin.
+- **The law is code with its source next to it.** `rules.js` carries the statute sections. `poverty.js` carries the year and a test pins the table. `policies.js` carries each hospital's policy date. Each sentence in the rights block carries the subsection it rests on, in a comment.
+- **The English on the page is the English in the strings file.** A test diffs them, so a Spanish translation can never sit under a stale English line.
+- **Recognized text never fills a field by itself.** Every finding from the bill reader shows with a "Use this" button. A wrong hospital or a wrong date does harm, so the person confirms each one.
+- **Small things that would have been bugs.** The yes or no questions on the state PDF are radio groups where the left box is Yes, found by dumping widget positions and pinned by a test. Date math is date-only, in UTC, with a test that crosses a daylight-saving change. The percent of the poverty line rounds up, so an income just over a cutoff never reads as "at" it.
+- **Reading 19 policies.** Fifteen are text. Four are scanned images; those were read with a 30-line Swift script on Apple's built-in text recognition, then checked by eye against the pages. The script is not in this repo.
+
+## Tests
+
+```
+npm test
+```
+
+Unit tests cover the rules at every boundary (200, 200.01, 250, 300, 500 percent and so on), the form parser, the dates, the poverty table, the PDF field map (a round trip through the real state form), the bill reader's heuristics, the calendar file, the pay helper, the rights text in both languages, the hospital policies, the offline file list, and the page itself (markup, i18n parity, contrast, no outside requests). There is no end-to-end runner; the flows were checked by hand in a browser before each commit.
+
 ## Not in this version
 
-Other states, hospital phone numbers, and a public URL. The photo reader handles English bills only. The filled form is the English state form even when the page is in Spanish; hospitals accept it either way.
+Other states and hospital phone numbers. The photo reader handles English bills only. The filled form is the English state form even when the page is in Spanish; hospitals accept it either way.
+
+## Author
+
+Ayush Kadigari, a senior at the University of Maryland studying information science and economics. Email: arkadigari@gmail.com. Built with Claude Code as a pair programmer. MIT license.
