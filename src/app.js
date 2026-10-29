@@ -127,7 +127,7 @@ function renderResult(result, view, { focus = true } = {}) {
     stamp,
     headline,
     element('p', view.detail, 'verdict__detail'),
-    element('p', view.deadlineText, 'verdict__deadline'),
+    element('p', `${view.deadlineText} ${view.afterApply}`, 'verdict__deadline'),
     ...(view.hospitalText ? [element('h3', UI[lang].yourHospital), element('p', view.hospitalText, 'verdict__hospital')] : []),
     element('h3', UI[lang].whatToBring),
     bulletList(view.bring),

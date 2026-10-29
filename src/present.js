@@ -2,7 +2,7 @@ import { POVERTY_GUIDELINES } from './poverty.js';
 import { TIERS, APPLICATION_WINDOW_DAYS } from './rules.js';
 import { RESULT } from './strings.js';
 import { hospitalById } from './hospitals.js';
-import { compareWithState } from './policies.js';
+import { compareWithState, catchesFor } from './policies.js';
 
 const SOURCE_URLS = Object.freeze([
   'https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ghg&enactments=false&section=19-214.1',
@@ -74,16 +74,17 @@ function hospitalViewFor(T, result, hospitalId) {
   const comparison = compareWithState(hospitalId, result);
   if (!hospital || !comparison) return null;
   const dated = policyDateText(T, comparison.policyDate);
+  const withCatches = (text) => [text, ...catchesFor(hospitalId).map((key) => T.catches[key])].join(' ');
   if (comparison.kind === 'better') {
     return Object.freeze({
       headline: T.hospital.betterHeadline(hospital.name, comparison.discount),
       stamp: comparison.discount === 100 ? T.stamp.free : T.stamp.reduced(comparison.discount),
-      text: T.hospital.better(hospital.name, dated, result.discount),
+      text: withCatches(T.hospital.better(hospital.name, dated, result.discount)),
     });
   }
-  if (comparison.kind === 'partial') return Object.freeze({ text: T.hospital.partial(hospital.name, comparison.upTo, dated) });
+  if (comparison.kind === 'partial') return Object.freeze({ text: withCatches(T.hospital.partial(hospital.name, comparison.upTo, dated)) });
   if (comparison.kind === 'unknown') return Object.freeze({ text: T.hospital.unknown(hospital.name) });
-  return Object.freeze({ text: T.hospital.same(hospital.name, dated) });
+  return Object.freeze({ text: withCatches(T.hospital.same(hospital.name, dated)) });
 }
 
 // Plain-language version of a result, in English or Spanish.
@@ -96,6 +97,7 @@ export function describe(result, lang = 'en', hospitalId = '') {
     headline: own?.headline ?? headlineFor(T, result),
     detail: detailFor(T, result),
     deadlineText: deadlineTextFor(T, result.deadline),
+    afterApply: T.afterApply,
     hospitalText: own?.text ?? null,
     bring: Object.freeze([...T.bring, ...programProof]),
     notes: Object.freeze([...T.notes]),

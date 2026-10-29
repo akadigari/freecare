@@ -61,6 +61,11 @@ test('deadline text', () => {
     "It's been more than 240 days since your first bill. Ask the hospital anyway, some still help.");
 });
 
+test('the result says what happens after a complete application goes in', () => {
+  assert.equal(view().afterApply, 'Once you hand in a complete application, the hospital has 14 days to decide, and it has to pause billing and collection while it does.');
+  assert.match(describeResult(checkEligibility({ householdSize: 1, income: 10000, isMarylandResident: true, programs: {}, firstBillDate: null, medicalBillsLast12Months: null }, TODAY), 'es').afterApply, /14 días/);
+});
+
 test('what to bring adds proof of programs', () => {
   assert.equal(view().bring.length, 3);
   assert.equal(view({ programs: { snap: true } }).bring.at(-1), 'Proof you get SNAP');
@@ -109,12 +114,12 @@ test('a picked hospital adds one line, and takes the headline when it gives more
   assert.equal(gbmc.headline, 'At Greater Baltimore Medical Center (GBMC), your care should be free.');
   assert.equal(gbmc.stamp, 'FREE');
   assert.equal(gbmc.hospitalText,
-    "That is Greater Baltimore Medical Center (GBMC)'s own policy, dated October 2025, which goes further than the state rule. The state alone would cut your bill by 60%.");
+    "That is Greater Baltimore Medical Center (GBMC)'s own policy, dated October 2025, which goes further than the state rule. The state alone would cut your bill by 60%. It also looks at what you have in the bank, and enough savings can disqualify you.");
   const hopkins = withView('johns-hopkins', { income: 115000 });
   assert.equal(hopkins.headline, 'At Johns Hopkins Medicine (Hopkins Hospital, Bayview, Howard County, Suburban), your bill should be cut by 35%.');
   assert.equal(hopkins.stamp, '35% OFF');
   assert.equal(hopkins.hospitalText,
-    "That is Johns Hopkins Medicine (Hopkins Hospital, Bayview, Howard County, Suburban)'s own policy, dated 2026, which goes further than the state rule. The state alone would not require a discount.");
+    "That is Johns Hopkins Medicine (Hopkins Hospital, Bayview, Howard County, Suburban)'s own policy, dated 2026, which goes further than the state rule. The state alone would not require a discount. It also looks at what you have in the bank: more than $100,000 in cash or investments can disqualify you.");
   assert.equal(withView('luminis').headline, 'Your care should be free.', 'the state headline stays when the hospital matches it');
   assert.equal(withHospital('luminis'), 'Luminis Health (Anne Arundel Medical Center, Doctors Community)\'s own policy, dated July 2024, matches the state rule at your income.');
   assert.equal(withHospital('sheppard-pratt'), "Sheppard Pratt's own policy matches the state rule at your income.");
@@ -146,6 +151,20 @@ test('the same result reads in Spanish', () => {
   assert.equal(gbmcEs.headline, 'En Greater Baltimore Medical Center (GBMC), su atención debería ser gratis.');
   assert.equal(gbmcEs.stamp, 'GRATIS');
   assert.equal(gbmcEs.hospitalText,
-    'Esa es la política propia de Greater Baltimore Medical Center (GBMC), con fecha octubre de 2025, que va más allá de la regla del estado. El estado por sí solo bajaría su factura un 60%.');
+    'Esa es la política propia de Greater Baltimore Medical Center (GBMC), con fecha octubre de 2025, que va más allá de la regla del estado. El estado por sí solo bajaría su factura un 60%. También mira lo que tiene en el banco, y suficientes ahorros pueden descalificarlo.');
   assert.equal(es().sources[0].url, view().sources[0].url);
+});
+
+test("a hospital's catches follow its line, in plain words", () => {
+  const hopkins = describeResult(checkEligibility({
+    householdSize: 4, income: 60000, isMarylandResident: true, programs: {},
+    firstBillDate: null, medicalBillsLast12Months: null,
+  }, TODAY), 'en', 'johns-hopkins');
+  assert.match(hopkins.hospitalText, /\$100,000/);
+  assert.match(hopkins.hospitalText, /matches the state rule at your income\. It also looks at what you have in the bank/);
+  const garrett = describeResult(checkEligibility({
+    householdSize: 4, income: 60000, isMarylandResident: true, programs: {},
+    firstBillDate: null, medicalBillsLast12Months: null,
+  }, TODAY), 'es', 'garrett-regional');
+  assert.match(garrett.hospitalText, /\$10,000/);
 });

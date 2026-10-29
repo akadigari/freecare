@@ -4,20 +4,21 @@
 //
 // Bands are [up to this percent of the poverty line, percent off]. standardBands need nothing
 // else; hardshipBands need medical bills over a quarter of income. partialUpTo means the
-// policy promises some help to that percent without saying how much.
+// policy promises some help to that percent without saying how much. catches are keys into
+// RESULT.catches in strings.js: asset tests and other things the hospital adds.
 // Four of the state's copies are scanned images; those were read with OCR and checked by eye.
 
 export const POLICIES_READ_ON = '2026-10-28';
 
 const band = ([maxPercent, discount]) => Object.freeze({ maxPercent, discount });
-const policy = ({ freeUpTo, standardBands = [], hardshipBands = [], partialUpTo = null, policyDate = null, note = null }) => Object.freeze({
+const policy = ({ freeUpTo, standardBands = [], hardshipBands = [], partialUpTo = null, policyDate = null, catches = [] }) => Object.freeze({
   known: true,
   freeUpTo,
   standardBands: Object.freeze(standardBands.map(band)),
   hardshipBands: Object.freeze(hardshipBands.map(band)),
   partialUpTo,
   policyDate,
-  note,
+  catches: Object.freeze([...catches]),
 });
 
 // Exactly the state minimum: free to 200%, 75% and 60% to 300%, hardship bands to 500%.
@@ -28,19 +29,19 @@ const STATE_MINIMUM = {
 };
 
 export const POLICIES = Object.freeze({
-  adventist: policy({ freeUpTo: 200, partialUpTo: 600, policyDate: '2025-04-30', note: 'partial help to 600%, amount not stated' }),
-  'ascension-st-agnes': policy({ freeUpTo: 250, partialUpTo: 500, policyDate: '2025-12', note: 'sliding scale to 500%, amounts not stated; looks at assets' }),
-  calverthealth: policy({ freeUpTo: 200, standardBands: [[250, 80], [300, 60], [350, 40], [400, 20], [500, 10]], policyDate: '2019-07-01', note: 'older than the 2026 state rules' }),
+  adventist: policy({ freeUpTo: 200, partialUpTo: 600, policyDate: '2025-04-30' }),
+  'ascension-st-agnes': policy({ freeUpTo: 250, partialUpTo: 500, policyDate: '2025-12', catches: ['assetsOverFpl250'] }),
+  calverthealth: policy({ freeUpTo: 200, standardBands: [[250, 80], [300, 60], [350, 40], [400, 20], [500, 10]], policyDate: '2019-07-01', catches: ['old2019'] }),
   'union-hospital': policy({ freeUpTo: 400, hardshipBands: [[450, 40], [500, 35]], policyDate: '2026-02-01' }),
-  'frederick-health': policy({ freeUpTo: 200, partialUpTo: 500, policyDate: '2026-03', note: 'sliding scale to 500% sits in an appendix the state copy leaves out' }),
-  'garrett-regional': policy({ freeUpTo: 200, standardBands: [[300, 75], [400, 50], [500, 25]], policyDate: '2025-11-10', note: 'after a $10,000 asset exclusion' }),
-  gbmc: policy({ freeUpTo: 300, standardBands: [[500, 50]], policyDate: '2025-10', note: 'asset test' }),
-  'holy-cross': policy({ freeUpTo: 200, standardBands: [[250, 75], [300, 60], [350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2025-10-02', note: 'hardship counts medical debt over 20% of income' }),
-  'johns-hopkins': policy({ freeUpTo: 200, standardBands: [[250, 75], [300, 60], [400, 35]], hardshipBands: [[350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2026', note: 'liquid assets under $100,000' }),
-  lifebridge: policy({ freeUpTo: 300, hardshipBands: [[350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2026-01-22', note: 'asset limits' }),
+  'frederick-health': policy({ freeUpTo: 200, partialUpTo: 500, policyDate: '2026-03' }),
+  'garrett-regional': policy({ freeUpTo: 200, standardBands: [[300, 75], [400, 50], [500, 25]], policyDate: '2025-11-10', catches: ['assetExclusion10k'] }),
+  gbmc: policy({ freeUpTo: 300, standardBands: [[500, 50]], policyDate: '2025-10', catches: ['assetTest'] }),
+  'holy-cross': policy({ freeUpTo: 200, standardBands: [[250, 75], [300, 60], [350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2025-10-02', catches: ['hardship20'] }),
+  'johns-hopkins': policy({ freeUpTo: 200, standardBands: [[250, 75], [300, 60], [400, 35]], hardshipBands: [[350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2026', catches: ['assets100k'] }),
+  lifebridge: policy({ freeUpTo: 300, hardshipBands: [[350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2026-01-22', catches: ['assetTest'] }),
   luminis: policy({ ...STATE_MINIMUM, policyDate: '2024-07' }),
   medstar: policy({ freeUpTo: 200, standardBands: [[250, 75], [300, 60], [350, 50], [400, 45]], hardshipBands: [[450, 40], [500, 35]], policyDate: '2026-03-16' }),
-  mercy: policy({ ...STATE_MINIMUM, policyDate: '2025-10', note: 'assets under $100,000' }),
+  mercy: policy({ ...STATE_MINIMUM, policyDate: '2025-10', catches: ['assets100k'] }),
   meritus: policy({ freeUpTo: 200, standardBands: [[300, 75], [400, 50], [500, 40]], policyDate: '2026-01' }),
   'mt-washington-pediatric': policy({ ...STATE_MINIMUM, policyDate: '2026-05' }),
   'sheppard-pratt': policy({ ...STATE_MINIMUM }),
@@ -65,6 +66,12 @@ export function hospitalDiscount(hospitalId, percent, hardship) {
   if (discount > 0) return discount;
   if (p.partialUpTo !== null && percent <= p.partialUpTo) return null;
   return 0;
+}
+
+// The extra things a hospital looks at, as keys into the strings file.
+export function catchesFor(hospitalId) {
+  const p = POLICIES[hospitalId];
+  return p && p.known !== false ? p.catches : Object.freeze([]);
 }
 
 // The state result against the hospital's own policy. Whichever gives more wins.

@@ -275,6 +275,15 @@ export const RESULT = Object.freeze({
       unknown: (name) => `The state's copy of ${name}'s policy has no income rules in it. The state rule above applies there too.`,
       dated: (date) => `, dated ${date},`,
     },
+    catches: {
+      assets100k: 'It also looks at what you have in the bank: more than $100,000 in cash or investments can disqualify you.',
+      assetTest: 'It also looks at what you have in the bank, and enough savings can disqualify you.',
+      assetExclusion10k: 'It adds what you own above a $10,000 exclusion to your income before it decides.',
+      assetsOverFpl250: 'It also looks at what you have in the bank: assets worth more than 250% of the poverty line can disqualify you.',
+      hardship20: "Its hardship rule is easier than the state's: medical debt over 20% of your income counts.",
+      old2019: 'Its table dates from 2019, before the current state rules, so where the table gives less the state rule wins.',
+    },
+    afterApply: 'Once you hand in a complete application, the hospital has 14 days to decide, and it has to pause billing and collection while it does.',
     sourceLabels: ['Maryland Health-General § 19-214.1', 'COMAR 10.37.13.06', 'HHS 2026 poverty guidelines'],
   }),
   es: Object.freeze({
@@ -319,6 +328,15 @@ export const RESULT = Object.freeze({
       unknown: (name) => `La copia del estado de la política de ${name} no incluye reglas de ingresos. La regla del estado de arriba también aplica ahí.`,
       dated: (date) => `, con fecha ${date},`,
     },
+    catches: {
+      assets100k: 'También mira lo que tiene en el banco: más de $100,000 en efectivo o inversiones puede descalificarlo.',
+      assetTest: 'También mira lo que tiene en el banco, y suficientes ahorros pueden descalificarlo.',
+      assetExclusion10k: 'Suma lo que posee por encima de una exclusión de $10,000 a sus ingresos antes de decidir.',
+      assetsOverFpl250: 'También mira lo que tiene en el banco: bienes que valgan más del 250% del nivel de pobreza pueden descalificarlo.',
+      hardship20: 'Su regla de dificultad económica es más fácil que la del estado: cuentan las deudas médicas que pasen del 20% de sus ingresos.',
+      old2019: 'Su tabla es de 2019, anterior a las reglas estatales actuales, así que donde la tabla da menos gana la regla del estado.',
+    },
+    afterApply: 'Una vez que entregue una solicitud completa, el hospital tiene 14 días para decidir, y tiene que pausar la facturación y el cobro mientras tanto.',
     sourceLabels: ['Maryland Health-General § 19-214.1', 'COMAR 10.37.13.06', 'Pautas federales de pobreza 2026 (HHS)'],
   }),
 });

@@ -19,6 +19,11 @@ function contrast(a, b) {
   return (high + 0.05) / (low + 0.05);
 }
 
+test('hint text is readable: at least 4.5:1 against the page in both modes', () => {
+  assert.ok(contrast(token(lightBlock, 'muted'), token(lightBlock, 'card')) >= 4.5, 'light');
+  assert.ok(contrast(token(darkBlock, 'muted'), token(darkBlock, 'card')) >= 4.5, 'dark');
+});
+
 test('focus ring is at least 3:1 against the page in light mode', () => {
   for (const background of ['card', 'paper']) {
     assert.ok(contrast(token(lightBlock, 'focus'), token(lightBlock, background)) >= 3, background);

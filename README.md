@@ -2,6 +2,12 @@
 
 Should your Maryland hospital bill be free? A one-page checker that answers in about a minute, using Maryland's own rules. It runs entirely in your browser: nothing you type is sent anywhere.
 
+<p align="center">
+  <img src="docs/screenshots/questions.jpg" width="31%" alt="The four questions, numbered like a paper form">
+  <img src="docs/screenshots/result.jpg" width="31%" alt="A result stamped FREE, with the hospital's own policy explained">
+  <img src="docs/screenshots/rights.jpg" width="31%" alt="What the hospital can't do to you, in three situations">
+</p>
+
 ## What it does today
 
 - Tells you whether state law says your care should be free, 75% off, 60% off, or a hardship discount, and that the hospital makes the final decision
@@ -11,7 +17,8 @@ Should your Maryland hospital bill be free? A one-page checker that answers in a
 - Lists what to bring, and which law the answer comes from
 - Works in English and Spanish. A switch at the top of the page changes every word, including the results and the error messages. The choice is remembered in your browser only.
 - Lets you pick your hospital (19 Maryland hospitals and health systems, from the state's own list) and links to that hospital's policy on the state's site, with a plain line on where to send the form.
-- Checks your hospital's own policy against the state rule and shows whichever gives more. All 19 policies were read from the state's copies on October 28, 2026 (four are scanned images and were read with OCR, then checked by eye). Four hospitals go well past the state: ChristianaCare Union gives free care up to 400% of the poverty line, GBMC and LifeBridge up to 300%, and Johns Hopkins and MedStar cut bills without a hardship up to 400%. When the hospital gives more, the headline and the stamp say so, with the policy's date. Two policies promise help without saying how much, and the state's copy for UPMC Western Maryland has no income rules; the page says so instead of guessing.
+- Tells you what happens after you apply: the hospital has 14 days to decide on a complete application and must pause billing and collection while it does (Health-General 19-214.1).
+- Checks your hospital's own policy against the state rule and shows whichever gives more. Where a policy adds a catch, like an asset test, the result says so in a sentence. All 19 policies were read from the state's copies on October 28, 2026 (four are scanned images and were read with OCR, then checked by eye). Four hospitals go well past the state: ChristianaCare Union gives free care up to 400% of the poverty line, GBMC and LifeBridge up to 300%, and Johns Hopkins and MedStar cut bills without a hardship up to 400%. When the hospital gives more, the headline and the stamp say so, with the policy's date. Two policies promise help without saying how much, and the state's copy for UPMC Western Maryland has no income rules; the page says so instead of guessing.
 - Reads a photo of the bill, on your phone. Text recognition (tesseract.js, vendored, about 6 MB that loads only when you pick a photo) runs in the browser and finds the hospital, the bill date and the amount due. Each one shows with a "Use this" button; nothing fills in until you confirm it, and the photo is never uploaded. It works well on a flat, well-lit photo of a printed bill and poorly on a crumpled or dark one.
 - Prints the result on one clean page for the billing desk, and saves the deadline as a calendar reminder (a standard .ics file made on the device, with a warning a week before).
 - Asks the Medicaid and assets questions, so the application comes out complete.
@@ -38,7 +45,7 @@ Sources: [Maryland Health-General 19-214.1](https://mgaleg.maryland.gov/mgawebsi
 ## Run it
 
 ```
-npm test                      # 109 tests, Node 22, no dependencies to install
+npm test                      # 113 tests, Node 22, no dependencies to install
 python3 -m http.server 8780   # then open http://localhost:8780
 ```
 

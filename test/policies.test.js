@@ -47,3 +47,18 @@ test('the better of the state rule and the hospital policy wins, and the text sa
   assert.deepEqual(compareWithState('upmc-western-maryland', state(100, 150)), { kind: 'unknown' });
   assert.equal(compareWithState('', state(100, 150)), null);
 });
+
+test('every catch in a policy is a known key with a sentence in both languages', async () => {
+  const { RESULT } = await import('../src/strings.js');
+  const keys = new Set();
+  for (const policy of Object.values(POLICIES)) for (const key of policy.catches ?? []) keys.add(key);
+  assert.ok(keys.size >= 5, `only ${keys.size} kinds of catch`);
+  for (const key of keys) {
+    assert.ok(typeof RESULT.en.catches[key] === 'string' && RESULT.en.catches[key].length > 10, `en ${key}`);
+    assert.ok(typeof RESULT.es.catches[key] === 'string' && RESULT.es.catches[key] !== RESULT.en.catches[key], `es ${key}`);
+  }
+  assert.deepEqual(POLICIES['johns-hopkins'].catches, ['assets100k']);
+  assert.deepEqual(POLICIES['holy-cross'].catches, ['hardship20']);
+  assert.deepEqual(POLICIES.calverthealth.catches, ['old2019']);
+  assert.deepEqual(POLICIES['upmc-western-maryland'].catches ?? [], []);
+});
