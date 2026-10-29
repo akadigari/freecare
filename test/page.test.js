@@ -135,3 +135,22 @@ test('the page tells people what a hospital cannot do to collect', () => {
   const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
   assert.match(css, /\.rights\b/);
 });
+
+test('the page opens on a statement block that shows the bill corrected, and takes the bill amount', () => {
+  assert.match(html, /<section class="bill[^"]*" id="bill"/);
+  assert.match(html, /id="bill-due"/);
+  assert.match(html, /id="bill-law"/);
+  assert.match(html, /<input id="billAmount" name="billAmount" inputmode="decimal"/);
+  assert.match(html, /data-i18n="bill\.due"/);
+  assert.match(html, /data-i18n="bill\.law"/);
+  assert.match(app, /from '\.\/rules\.js'/);
+  assert.match(app, /owedAfterDiscount\(/);
+  assert.match(app, /renderBill\(/);
+});
+
+test('the page is set in one plain family on white, not a serif on cream', () => {
+  const css = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /--paper: #ffffff/);
+  assert.doesNotMatch(css, /Palatino|Iowan|Georgia/);
+  assert.doesNotMatch(css, /rotate\(-4deg\)/, 'no rotated stamp');
+});

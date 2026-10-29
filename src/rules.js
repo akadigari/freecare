@@ -53,6 +53,13 @@ export function discountFor(income, householdSize, hardship) {
     : Object.freeze({ tier: TIERS.NOT_REQUIRED, discount: 0 });
 }
 
+// What a bill comes to after a percent discount, in cents, rounded to the cent.
+export function owedAfterDiscount(billCents, discount) {
+  assertAmount(billCents, 'Bill');
+  if (typeof discount !== 'number' || discount < 0 || discount > 100) throw new RangeError('Discount must be from 0 to 100.');
+  return Math.round((billCents * (100 - discount)) / 100);
+}
+
 export function applicationDeadline(firstBillIso, todayIso) {
   const daysSinceBill = daysBetween(firstBillIso, todayIso);
   if (daysSinceBill < 0) throw new RangeError('The first bill date cannot be in the future.');

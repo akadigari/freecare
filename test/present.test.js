@@ -168,3 +168,11 @@ test("a hospital's catches follow its line, in plain words", () => {
   }, TODAY), 'es', 'garrett-regional');
   assert.match(garrett.hospitalText, /\$10,000/);
 });
+
+test('the view carries the discount it is describing, the hospital one when that is better', () => {
+  assert.equal(view().discount, 100);
+  assert.equal(view({ income: 70000 }).discount, 75);
+  assert.equal(view({ income: 200000 }).discount, 0);
+  assert.equal(describeResult(checkEligibility({ householdSize: 4, income: 92000, isMarylandResident: true, programs: {}, firstBillDate: null, medicalBillsLast12Months: null }, TODAY), 'en', 'gbmc').discount, 100, 'GBMC gives free care at 278%');
+  assert.equal(describeResult(checkEligibility({ householdSize: 4, income: 92000, isMarylandResident: true, programs: {}, firstBillDate: null, medicalBillsLast12Months: null }, TODAY), 'en', 'luminis').discount, 60);
+});

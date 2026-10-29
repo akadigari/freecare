@@ -27,6 +27,19 @@
       <p class="intro__privacy" data-i18n="privacy">Takes about a minute. Nothing you type leaves this page.</p>
     </header>
 
+    <section class="bill bill--example" id="bill" aria-live="polite">
+      <p class="bill__name" id="bill-name" data-i18n="bill.heading">Your statement</p>
+      <dl class="bill__rows">
+        <div class="bill__row"><dt data-i18n="bill.due">Amount due on the bill</dt><dd class="bill__amount is-struck" id="bill-due">$1,150.00</dd></div>
+        <div class="bill__row bill__row--law"><dt data-i18n="bill.law">What Maryland law says you owe</dt><dd class="bill__amount" id="bill-law">$0.00</dd></div>
+      </dl>
+      <p class="bill__note" id="bill-note" data-i18n="bill.example">Example: a family of four earning $60,000, with a $1,150 bill. Answer the four questions below and this becomes yours.</p>
+      <div class="field bill__field">
+        <label for="billAmount" data-i18n="billAmount.label">Amount on your bill</label>
+        <input id="billAmount" name="billAmount" inputmode="decimal" autocomplete="off" data-i18n-placeholder="billAmount.placeholder" placeholder="e.g. 1,150">
+      </div>
+    </section>
+
     <form id="check-form" class="check" novalidate>
       <div class="field">
         <label for="householdSize" data-i18n="householdSize.label">How many people live in your household?</label>

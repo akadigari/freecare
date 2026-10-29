@@ -1,5 +1,5 @@
 import { runCheck } from './check.js';
-import { PROGRAM_KEYS } from './rules.js';
+import { PROGRAM_KEYS, owedAfterDiscount } from './rules.js';
 import { todayIso } from './dates.js';
 import { describe } from './present.js';
 import { fillApplication, FORM, MAX_MEMBERS } from './apply.js';
@@ -34,11 +34,19 @@ const payOut = document.getElementById('pay-out');
 const payYearly = document.getElementById('pay-yearly');
 const payUse = document.getElementById('pay-use');
 const rightsSection = document.getElementById('rights');
+const billSection = document.getElementById('bill');
+const billName = document.getElementById('bill-name');
+const billDue = document.getElementById('bill-due');
+const billLaw = document.getElementById('bill-law');
+const billNote = document.getElementById('bill-note');
+const billAmountInput = document.getElementById('billAmount');
+const EXAMPLE_BILL_CENTS = 115000;
 const wholeDollars = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 const FIELDS_WITH_ERRORS = Object.freeze(['householdSize', 'income', 'resident', 'firstBillDate', 'medicalBills']);
 const LANG_KEY = 'freecare-lang';
 
 let lastResult = null;
+let lastView = null;
 let lang = 'en';
 let payFigure = null;
 
@@ -281,6 +289,44 @@ payUse.addEventListener('click', usePay);
 }));
 updatePay();
 
+// The statement block at the top: an example until there is a result, then the person's own bill.
+function billCents() {
+  const cleaned = billAmountInput.value.replace(/[$,\s]/g, '');
+  if (cleaned === '' || !/^\d*\.?\d+$/.test(cleaned)) return null;
+  return Math.round(Number(cleaned) * 100);
+}
+
+function renderBill() {
+  const T = UI[lang];
+  const cents = new Intl.NumberFormat(lang === 'es' ? 'es-US' : 'en-US', { style: 'currency', currency: 'USD' });
+  const hospital = hospitalById(hospitalSelect.value);
+  billName.textContent = hospital ? hospital.name : textFor(lang, 'bill.heading');
+  if (!lastView) {
+    billSection.classList.add('bill--example');
+    billDue.textContent = cents.format(EXAMPLE_BILL_CENTS / 100);
+    billDue.classList.add('is-struck');
+    billLaw.textContent = cents.format(0);
+    billNote.textContent = textFor(lang, 'bill.example');
+    return;
+  }
+  billSection.classList.remove('bill--example');
+  const discount = lastView.discount;
+  const entered = billCents();
+  if (entered === null) {
+    billDue.textContent = T.billNotEntered;
+    billDue.classList.remove('is-struck');
+    billLaw.textContent = discount === 100 ? T.billFree : discount > 0 ? T.billLess(discount) : T.billFull;
+    billNote.textContent = `${T.billResultNote(discount)} ${T.billTypeIt}`;
+    return;
+  }
+  billDue.textContent = cents.format(entered / 100);
+  billDue.classList.toggle('is-struck', discount > 0);
+  billLaw.textContent = cents.format(owedAfterDiscount(entered, discount) / 100);
+  billNote.textContent = T.billResultNote(discount);
+}
+
+billAmountInput.addEventListener('input', renderBill);
+
 function outsideLink(text, url) {
   const link = element('a', text);
   link.href = url;
@@ -312,15 +358,21 @@ function setLanguage(next) {
   renderRights();
   updatePay();
   if (lastResult) {
-    renderResult(lastResult, describe(lastResult, lang, hospitalSelect.value), { focus: false });
+    lastView = describe(lastResult, lang, hospitalSelect.value);
+    renderResult(lastResult, lastView, { focus: false });
     relabelMembers();
   }
+  renderBill();
 }
 
 langToggle.addEventListener('click', () => setLanguage(lang === 'en' ? 'es' : 'en'));
 hospitalSelect.addEventListener('change', () => {
   renderHospitalHelp();
-  if (lastResult) renderResult(lastResult, describe(lastResult, lang, hospitalSelect.value), { focus: false });
+  if (lastResult) {
+    lastView = describe(lastResult, lang, hospitalSelect.value);
+    renderResult(lastResult, lastView, { focus: false });
+  }
+  renderBill();
 });
 fillHospitalList();
 
@@ -360,7 +412,8 @@ function showFindings(read) {
   }
   if (read.amountDue) {
     items.push(finding(T.foundAmount(money.format(read.amountDue.cents / 100)), read.amountDue.source, () => {
-      form.elements.medicalBills.value = String(Math.round(read.amountDue.cents / 100));
+      billAmountInput.value = (read.amountDue.cents / 100).toFixed(2);
+      renderBill();
     }));
   }
   photoFindings.replaceChildren(...items);
@@ -421,12 +474,16 @@ form.addEventListener('submit', (event) => {
   showFieldErrors(outcome.status === 'invalid' ? outcome.errors : {});
   showFormError(outcome.status === 'failed' ? outcome.message : '');
   if (outcome.status === 'ok') {
+    lastView = outcome.view;
     renderResult(outcome.result, outcome.view);
     showApply(outcome.result);
+    renderBill();
     return;
   }
   clearResult();
+  lastView = null;
   applySection.hidden = true;
+  renderBill();
 });
 
 setLanguage(pickLanguage(savedLanguage(), navigator.language));

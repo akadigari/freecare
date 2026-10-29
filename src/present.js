@@ -77,6 +77,7 @@ function hospitalViewFor(T, result, hospitalId) {
   const withCatches = (text) => [text, ...catchesFor(hospitalId).map((key) => T.catches[key])].join(' ');
   if (comparison.kind === 'better') {
     return Object.freeze({
+      discount: comparison.discount,
       headline: T.hospital.betterHeadline(hospital.name, comparison.discount),
       stamp: comparison.discount === 100 ? T.stamp.free : T.stamp.reduced(comparison.discount),
       text: withCatches(T.hospital.better(hospital.name, dated, result.discount)),
@@ -93,6 +94,7 @@ export function describe(result, lang = 'en', hospitalId = '') {
   const programProof = result.presumptivePrograms.length > 0 ? [T.proof(T.programs(result.presumptivePrograms))] : [];
   const own = hospitalViewFor(T, result, hospitalId);
   return Object.freeze({
+    discount: own?.discount ?? result.discount,
     stamp: own?.stamp ?? stampFor(T, result),
     headline: own?.headline ?? headlineFor(T, result),
     detail: detailFor(T, result),

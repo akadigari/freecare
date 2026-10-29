@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkEligibility, hasHardship, applicationDeadline, TIERS, PROGRAM_KEYS } from '../src/rules.js';
+import { checkEligibility, hasHardship, applicationDeadline, TIERS, PROGRAM_KEYS, owedAfterDiscount } from '../src/rules.js';
 
 const TODAY = '2026-09-26';
 const check = (overrides = {}) => checkEligibility({
@@ -98,4 +98,15 @@ test('result is frozen and carries the numbers the page needs', () => {
   assert.equal(result.householdSize, 4);
   assert.equal(result.deadline.daysLeft, 215);
   assert.equal(result.deadline.deadline, '2027-04-29');
+});
+
+test('what you would owe after a discount, in cents, never negative and never fractional', () => {
+  assert.equal(owedAfterDiscount(115000, 100), 0);
+  assert.equal(owedAfterDiscount(115000, 75), 28750);
+  assert.equal(owedAfterDiscount(115000, 60), 46000);
+  assert.equal(owedAfterDiscount(115000, 0), 115000);
+  assert.equal(owedAfterDiscount(33333, 75), 8333);
+  assert.equal(owedAfterDiscount(0, 75), 0);
+  assert.throws(() => owedAfterDiscount(-5, 75), RangeError);
+  assert.throws(() => owedAfterDiscount(100, 101), RangeError);
 });
