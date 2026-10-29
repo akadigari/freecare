@@ -18,7 +18,7 @@ Maryland law makes hospitals write off bills for people at or below 200% of the 
 
 | | |
 |---|---|
-| Tests | 113, run with Node's own test runner |
+| Tests | 118, run with Node's own test runner |
 | npm dependencies | 0 |
 | Outside requests from the page | 0, and a test proves it |
 | Hospital policies read and encoded | 19 of 19 on the state's list |
@@ -63,7 +63,7 @@ Sources: [Maryland Health-General 19-214.1](https://mgaleg.maryland.gov/mgawebsi
 ## Run it
 
 ```
-npm test                      # 113 tests, Node 22, no dependencies to install
+npm test                      # 118 tests, Node 22, no dependencies to install
 python3 -m http.server 8780   # then open http://localhost:8780
 ```
 
