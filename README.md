@@ -5,8 +5,8 @@ Should your Maryland hospital bill be free? A one-page checker that answers in a
 Live: https://akadigari.github.io/freecare/
 
 <p align="center">
-  <img src="docs/screenshots/questions.jpg" width="31%" alt="The four questions, numbered like a paper form">
-  <img src="docs/screenshots/result.jpg" width="31%" alt="A result stamped FREE, with the hospital's own policy explained">
+  <img src="docs/screenshots/questions.jpg" width="31%" alt="The statement block: the amount on the bill struck through, and what Maryland law says you owe">
+  <img src="docs/screenshots/result.jpg" width="31%" alt="The result: the reasoning, the deadline, what to bring">
   <img src="docs/screenshots/rights.jpg" width="31%" alt="What the hospital can't do to you, in three situations">
 </p>
 
@@ -91,7 +91,7 @@ python3 -m http.server 8780   # then open http://localhost:8780
 | `.github/workflows/test.yml` | Runs the tests on every push |
 | `vendor/pdf-lib/` | pdf-lib 1.17.1 (MIT), used to fill the form in the browser. Loads only when someone fills the application |
 | `vendor/tesseract/` | tesseract.js 7.0.0 and tesseract.js-core 7.0.0 (Apache-2.0), LSTM builds only, plus the fast English model from tessdata. Loads only when someone picks a photo |
-| `src/app.js`, `index.html`, `src/styles.css` | The page. System fonts, no outside requests |
+| `src/app.js`, `index.html`, `src/styles.css` | The page, set like a printed statement. System fonts, no outside requests |
 
 ## Engineering notes
 
@@ -100,6 +100,7 @@ python3 -m http.server 8780   # then open http://localhost:8780
 - **The law is code with its source next to it.** `rules.js` carries the statute sections. `poverty.js` carries the year and a test pins the table. `policies.js` carries each hospital's policy date. Each sentence in the rights block carries the subsection it rests on, in a comment.
 - **The English on the page is the English in the strings file.** A test diffs them, so a Spanish translation can never sit under a stale English line.
 - **Recognized text never fills a field by itself.** Every finding from the bill reader shows with a "Use this" button. A wrong hospital or a wrong date does harm, so the person confirms each one.
+- **The page is the bill, corrected.** The first screen is a statement block: the amount due struck through, and under it what the law says you owe, in dollars once the person types their bill amount. It is set in one plain grotesque on white, the way a printed statement is, because that is the object a patient is holding.
 - **Small things that would have been bugs.** The yes or no questions on the state PDF are radio groups where the left box is Yes, found by dumping widget positions and pinned by a test. Date math is date-only, in UTC, with a test that crosses a daylight-saving change. The percent of the poverty line rounds up, so an income just over a cutoff never reads as "at" it.
 - **Reading 19 policies.** Fifteen are text. Four are scanned images; those were read with a 30-line Swift script on Apple's built-in text recognition, then checked by eye against the pages. The script is not in this repo.
 
