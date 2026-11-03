@@ -62,3 +62,13 @@ test('every catch in a policy is a known key with a sentence in both languages',
   assert.deepEqual(POLICIES.calverthealth.catches, ['old2019']);
   assert.deepEqual(POLICIES['upmc-western-maryland'].catches ?? [], []);
 });
+
+test("Frederick's own 2026 matrix matches the state bands exactly and adds 20% off above 500%", () => {
+  const frederick = POLICIES['frederick-health'];
+  assert.equal(frederick.freeUpTo, 200);
+  assert.deepEqual(frederick.standardBands.map((b) => [b.maxPercent, b.discount]), [[250, 75], [300, 60], [350, 50], [400, 45], [450, 40], [500, 35]]);
+  assert.equal(frederick.partialUpTo, null);
+  assert.deepEqual(frederick.catches, ['over500']);
+  const stateAt280 = { discount: 60, percentOfPovertyLine: 280, hardship: false };
+  assert.equal(compareWithState('frederick-health', stateAt280).kind, 'same');
+});

@@ -154,3 +154,12 @@ test('the page is set in one plain family on white, not a serif on cream', () =>
   assert.doesNotMatch(css, /Palatino|Iowan|Georgia/);
   assert.doesNotMatch(css, /rotate\(-4deg\)/, 'no rotated stamp');
 });
+
+test('the result can be shared from the phone and a cover letter printed for the billing office', () => {
+  assert.match(app, /from '\.\/share\.js'/);
+  assert.match(app, /navigator\.share/);
+  assert.match(app, /from '\.\/letter\.js'/);
+  assert.match(app, /coverLetter\(/);
+  assert.match(html, /<section class="bill[^"]*" id="bill" aria-labelledby="bill-name"/, 'the statement block names itself for screen readers');
+  assert.doesNotMatch(html, /with 113 tests|with 118 tests/, 'no test count that goes stale in the footer');
+});

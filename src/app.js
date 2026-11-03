@@ -9,6 +9,8 @@ import { HOSPITALS, hospitalById } from './hospitals.js';
 import { deadlineCalendar, CALENDAR_FILE } from './calendar.js';
 import { readBillImage } from './ocr.js';
 import { readBill } from './bill.js';
+import { shareText } from './share.js';
+import { coverLetter, LETTER_FILE } from './letter.js';
 import { yearlyIncome } from './income.js';
 import { rightsFor } from './rights.js';
 
@@ -166,6 +168,18 @@ function resultActions(result) {
   const print = element('button', UI[lang].printResult);
   print.type = 'button';
   print.addEventListener('click', () => window.print());
+  const share = element('button', UI[lang].shareResult);
+  share.type = 'button';
+  share.addEventListener('click', async () => {
+    const text = shareText(lastView, lang);
+    try {
+      if (navigator.share) await navigator.share({ title: document.title, text });
+      else if (navigator.clipboard) { await navigator.clipboard.writeText(text); share.textContent = UI[lang].copied; }
+    } catch {
+      // The person closed the share sheet. Nothing to do.
+    }
+  });
+  actions.append(share);
   actions.append(print);
   if (result.deadline?.isOpen) {
     const save = element('button', UI[lang].addToCalendar);
@@ -432,6 +446,36 @@ billPhoto.addEventListener('change', async () => {
   } catch {
     setPhotoStatus(UI[lang].photoFailed);
   }
+});
+
+// A printable cover letter from what the application form holds and the result above.
+function openText(text, filename, title) {
+  const popup = window.open('', '_blank');
+  if (popup && popup.document) {
+    const pre = popup.document.createElement('pre');
+    pre.textContent = text;
+    pre.style.cssText = 'font: 12pt/1.6 Helvetica, Arial, sans-serif; white-space: pre-wrap; max-width: 40rem; margin: 2rem auto;';
+    popup.document.title = title;
+    popup.document.body.append(pre);
+    popup.document.close();
+    return;
+  }
+  downloadText(text, filename, 'text/plain');
+}
+
+document.getElementById('letter-button').addEventListener('click', () => {
+  if (!lastResult) { applyError.textContent = UI[lang].letterNeedsResult; applyError.hidden = false; return; }
+  const data = new FormData(applyForm);
+  const text = (name) => String(data.get(name) ?? '');
+  const hospital = hospitalById(hospitalSelect.value);
+  const letter = coverLetter({
+    who: { name: text('applicantName'), street: text('street'), unit: text('unit'), city: text('city'), zip: text('zip'), phone: text('phone') },
+    hospitalName: hospital ? hospital.name : '',
+    result: lastResult,
+    todayIso: todayIso(),
+    lang,
+  });
+  openText(letter, LETTER_FILE, UI[lang].letterTitle);
 });
 
 applyForm.addEventListener('submit', async (event) => {

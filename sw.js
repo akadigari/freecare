@@ -2,7 +2,7 @@
 // basement has. Everything comes from this site; the worker never asks any other.
 // Each visit serves the saved copy at once and quietly refreshes it for next time.
 
-const CACHE = 'freecare-1';
+const CACHE = 'freecare-2';
 
 // Saved on install. The 13 MB bill reader is not here; it is saved the first time it is used.
 const PRECACHE = [
@@ -20,12 +20,14 @@ const PRECACHE = [
   'src/hospitals.js',
   'src/i18n.js',
   'src/income.js',
+  'src/letter.js',
   'src/ocr.js',
   'src/policies.js',
   'src/poverty.js',
   'src/present.js',
   'src/rights.js',
   'src/rules.js',
+  'src/share.js',
   'src/strings.js',
   'forms/md-uniform-financial-assistance-2026-03-06.pdf',
   'vendor/pdf-lib/pdf-lib.esm.min.js',

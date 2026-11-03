@@ -27,7 +27,7 @@
       <p class="intro__privacy" data-i18n="privacy">Takes about a minute. Nothing you type leaves this page.</p>
     </header>
 
-    <section class="bill bill--example" id="bill" aria-live="polite">
+    <section class="bill bill--example" id="bill" aria-labelledby="bill-name" aria-live="polite">
       <p class="bill__name" id="bill-name" data-i18n="bill.heading">Your statement</p>
       <dl class="bill__rows">
         <div class="bill__row"><dt data-i18n="bill.due">Amount due on the bill</dt><dd class="bill__amount is-struck" id="bill-due">$1,150.00</dd></div>
@@ -194,6 +194,7 @@
         </fieldset>
         <p class="error" id="apply-error" role="alert" hidden></p>
         <button type="submit" id="apply-button" class="check__button" data-i18n="apply.button">Download the filled application (PDF)</button>
+        <button type="button" id="letter-button" class="check__button check__button--quiet" data-i18n="apply.letter">Print a cover letter</button>
         <p class="hint" data-i18n="apply.note">Nothing you type is sent anywhere. The PDF is made on your device. Send it to the hospital's financial assistance office, listed on your bill.</p>
       </form>
     </section>
@@ -204,7 +205,7 @@
   <footer class="footer">
     <p data-i18n="footer.law">Built on Maryland Health-General 19-214.1 and 19-214.2, COMAR 10.37.13.06 and the 2026 federal poverty guidelines. It runs in your browser and sends nothing anywhere. A guide, not legal advice.</p>
     <p><span data-i18n="footer.made">I am Ayush Kadigari, a student at the University of Maryland, not a hospital and not a lawyer. If this gets something wrong, tell me:</span> <a href="mailto:arkadigari@gmail.com">arkadigari@gmail.com</a>.</p>
-    <p><a href="https://github.com/akadigari/freecare" data-i18n="footer.code">The code is public on GitHub, with 113 tests</a>.</p>
+    <p><a href="https://github.com/akadigari/freecare" data-i18n="footer.code">The code is public on GitHub, every rule tested</a>.</p>
   </footer>
 
   <script type="module" src="src/app.js"></script>

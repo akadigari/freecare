@@ -130,6 +130,8 @@ input[aria-invalid="true"] { border-color: var(--error); }
 .check__button { display: inline-block; margin-top: 1.25rem; color: var(--paper); background: var(--ink); border: 2px solid var(--ink); padding: 0.9rem 1.4rem; }
 .check__button:hover { background: var(--blue); border-color: var(--blue); }
 .check__button:disabled { opacity: 0.5; cursor: default; }
+.check__button--quiet { color: var(--ink); background: transparent; margin-left: 0.5rem; }
+.check__button--quiet:hover { color: var(--paper); background: var(--ink); border-color: var(--ink); }
 .verdict__actions button, .findings button, .pay__out button { font-weight: 600; font-size: 0.9rem; color: var(--ink); background: transparent; border: 1.5px solid var(--ink); padding: 0.5rem 0.85rem; }
 .verdict__actions button:hover, .findings button:hover, .pay__out button:hover { background: var(--ink); color: var(--paper); }
 .findings button:disabled, .pay__out button:disabled { opacity: 0.6; cursor: default; }

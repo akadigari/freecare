@@ -53,5 +53,5 @@ test('the page registers the worker and can be added to a home screen', () => {
     assert.match(icon.sizes, /^\d+x\d+$/);
   }
   assert.ok(manifest.icons.some((i) => i.sizes === '512x512'));
-  assert.doesNotMatch(JSON.stringify(manifest), /—/);
+  assert.doesNotMatch(JSON.stringify(manifest), /\u2014/);
 });

@@ -7,6 +7,8 @@
 // policy promises some help to that percent without saying how much. catches are keys into
 // RESULT.catches in strings.js: asset tests and other things the hospital adds.
 // Four of the state's copies are scanned images; those were read with OCR and checked by eye.
+// Frederick's state copy left the bands blank, so its bands come from the hospital's own 2026
+// matrix (frederickhealth.org, Appendix A), read 2026-11-02.
 
 export const POLICIES_READ_ON = '2026-10-28';
 
@@ -33,7 +35,7 @@ export const POLICIES = Object.freeze({
   'ascension-st-agnes': policy({ freeUpTo: 250, partialUpTo: 500, policyDate: '2025-12', catches: ['assetsOverFpl250'] }),
   calverthealth: policy({ freeUpTo: 200, standardBands: [[250, 80], [300, 60], [350, 40], [400, 20], [500, 10]], policyDate: '2019-07-01', catches: ['old2019'] }),
   'union-hospital': policy({ freeUpTo: 400, hardshipBands: [[450, 40], [500, 35]], policyDate: '2026-02-01' }),
-  'frederick-health': policy({ freeUpTo: 200, partialUpTo: 500, policyDate: '2026-03' }),
+  'frederick-health': policy({ freeUpTo: 200, standardBands: [[250, 75], [300, 60], [350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2026-03', catches: ['over500'] }),
   'garrett-regional': policy({ freeUpTo: 200, standardBands: [[300, 75], [400, 50], [500, 25]], policyDate: '2025-11-10', catches: ['assetExclusion10k'] }),
   gbmc: policy({ freeUpTo: 300, standardBands: [[500, 50]], policyDate: '2025-10', catches: ['assetTest'] }),
   'holy-cross': policy({ freeUpTo: 200, standardBands: [[250, 75], [300, 60], [350, 50], [400, 45], [450, 40], [500, 35]], policyDate: '2025-10-02', catches: ['hardship20'] }),
