@@ -8,7 +8,11 @@
 // RESULT.catches in strings.js: asset tests and other things the hospital adds.
 // Four of the state's copies are scanned images; those were read with OCR and checked by eye.
 // Frederick's state copy left the bands blank, so its bands come from the hospital's own 2026
-// matrix (frederickhealth.org, Appendix A), read 2026-11-02.
+// matrix (frederickhealth.org, Appendix A), read 2026-11-02. Ascension's own plain-language summary
+// (healthcare.ascension.org, read the same day) says what the state's copy says: free to 250%, a
+// sliding scale or means test to 500%, an asset test at 250% of the poverty line, no percentages
+// published. Adventist's 2025 policy keeps its percentages in a separate guidelines sheet that is
+// not posted anywhere public.
 
 export const POLICIES_READ_ON = '2026-10-28';
 
