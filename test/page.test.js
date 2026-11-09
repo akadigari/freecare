@@ -163,3 +163,9 @@ test('the result can be shared from the phone and a cover letter printed for the
   assert.match(html, /<section class="bill[^"]*" id="bill" aria-labelledby="bill-name"/, 'the statement block names itself for screen readers');
   assert.doesNotMatch(html, /with 113 tests|with 118 tests/, 'no test count that goes stale in the footer');
 });
+
+test('the bill page accepts the renewal handoff once and links to the renewal page', () => {
+  assert.match(app, /sessionStorage\.getItem\('freecare-handoff'\)/);
+  assert.match(app, /sessionStorage\.removeItem\('freecare-handoff'\)/);
+  assert.match(html, /<a href="renew\.html" data-i18n="renew\.link">/);
+});

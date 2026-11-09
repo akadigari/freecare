@@ -536,4 +536,20 @@ setLanguage(pickLanguage(savedLanguage(), navigator.language));
 button.disabled = false;
 
 // Keeps a copy of the page on the phone, so it opens in a hospital basement with no signal.
+// The renewal page (renew.html) can hand over household size and yearly income through
+// sessionStorage. This page reads them once, fills the two boxes, and forgets them.
+function readHandoff() {
+  try {
+    const raw = sessionStorage.getItem('freecare-handoff');
+    if (!raw) return;
+    sessionStorage.removeItem('freecare-handoff');
+    const { householdSize, income } = JSON.parse(raw);
+    const size = String(householdSize ?? '').trim();
+    const yearly = String(income ?? '').replace(/[$,\s]/g, '');
+    if (/^\d+$/.test(size) && Number(size) > 0) form.elements.householdSize.value = size;
+    if (/^\d*\.?\d+$/.test(yearly) && Number(yearly) > 0) form.elements.income.value = yearly;
+  } catch { /* private window, storage off, or bad JSON: start blank */ }
+}
+readHandoff();
+
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});

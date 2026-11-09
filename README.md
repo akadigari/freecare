@@ -121,3 +121,26 @@ Other states and hospital phone numbers. The photo reader handles English bills 
 ## Author
 
 Ayush Kadigari, a senior at the University of Maryland studying information science and economics. Email: arkadigari@gmail.com. Built with Claude Code as a pair programmer. MIT license.
+
+## Medicaid proof packet (renew.html)
+
+Starting January 1, 2027, Maryland checks that some adults on Medicaid (ages 19 to 64, up to 320,000 members) work or do other approved activities, and renews them every six months. The state checks its own data first and sends a letter only when it needs proof. `renew.html` is for that letter: a member, or the counselor sitting with them, builds one dated PDF that proves one month met the rule, with the documents behind it, entirely on the device.
+
+| Rule (Maryland Health Connection, read 2026-11-06) | What the page does with it |
+|---|---|
+| Earn at least $580 a month from a job | Sums gross pay across jobs for the month, typed or read from a pay stub photo |
+| Go to school at least half-time | One checkbox |
+| 80 hours a month of any mix of paid work, school, job training, volunteering | Adds job hours and other hours |
+| Exemptions (general, special, health, hardship, local) | Lists Maryland's own wording, with the documents people usually bring. It never says whether an exemption applies |
+
+The packet: an English cover sheet a caseworker can read in thirty seconds (the month, the arithmetic, which published test is met or "Below each threshold for this month", the attached documents, a signature line the page never fills, and the sentence "This is my own summary. Maryland Health Connection makes the decision."), a Spanish member sheet when the page is in Spanish, an optional signable work statement for cash and odd jobs, then each photo or PDF on its own page. A plain-text record for the counselor prints what was entered and what the page said. "Start over for the next person" clears everything. The household numbers can be handed to the hospital check on the bill page in the same tab.
+
+| File | Job |
+|---|---|
+| `src/workrule.js` | The thresholds, the exemption list, the month test. Re-verify against the Maryland page each build and update `verified` |
+| `src/stub.js` | Pay stub heuristics: employer, pay date, pay period, hours, gross |
+| `src/packet.js` | The PDF: cover sheet, member sheet, work statement, attachments |
+| `src/record.js` | The counselor's plain-text record |
+| `src/renew.js`, `renew.html` | The page |
+
+Sources: [Maryland Health Connection, Medicaid Check-In](https://www.marylandhealthconnection.gov/checkin/); Public Law 119-21 (six-month renewals, section 71107); CMS interim final rule CMS-2454-IFC, 91 FR 33348 (June 3, 2026). `npm test` runs 154 tests across both pages.

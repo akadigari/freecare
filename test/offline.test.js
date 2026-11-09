@@ -28,7 +28,7 @@ test('every page module is cached, so the page works offline after one visit', (
   for (const name of readdirSync(new URL('src/', root))) {
     assert.ok(files.has(`src/${name}`), `src/${name} is not precached`);
   }
-  for (const must of ['./', 'index.html', 'manifest.json', 'forms/md-uniform-financial-assistance-2026-03-06.pdf', 'vendor/pdf-lib/pdf-lib.esm.min.js']) {
+  for (const must of ['./', 'index.html', 'renew.html', 'manifest.json', 'forms/md-uniform-financial-assistance-2026-03-06.pdf', 'vendor/pdf-lib/pdf-lib.esm.min.js']) {
     assert.ok(files.has(must), must);
   }
   assert.ok(![...files].some((f) => f.includes('tesseract')), 'the 13 MB reader is cached when first used, not up front');

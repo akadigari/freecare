@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Got a Medicaid work-rule letter? Build your proof packet</title>
+  <meta name="description" content="Put one month of proof for Maryland's Medicaid work rule into one PDF, on your own device. Nothing you type or photograph leaves it.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Got a Medicaid work-rule letter? Build your proof packet">
+  <meta property="og:description" content="One month of pay stubs, hours and documents into one PDF with a cover sheet a caseworker can read in thirty seconds. Made on your device.">
+  <meta property="og:url" content="https://akadigari.github.io/freecare/renew.html">
+  <meta name="theme-color" content="#fcfbf7">
+  <meta name="theme-color" content="#1d1f22" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <main>
+    <header class="intro">
+      <button type="button" id="lang-toggle" class="lang" data-i18n="lang.toggle">Español</button>
+      <h1 data-i18n="renew.title">Got a Medicaid work-rule letter? Build your proof packet</h1>
+      <p class="intro__lede" data-i18n="renew.lede">Starting January 2027, Maryland checks that some adults on Medicaid work or do other approved activities. If Maryland Health Connection asks you for proof, this page helps you put one month of proof together in one PDF.</p>
+      <p class="intro__privacy" data-i18n="renew.privacy">Nothing you type or photograph leaves this device. Nothing you enter is saved after you close the page.</p>
+      <p class="intro__privacy"><a href="index.html" data-i18n="renew.toBill">Have a hospital bill too? Check it here</a></p>
+    </header>
+
+    <noscript><p class="error">This page needs JavaScript to read your pay stubs and build the PDF on your device. Nothing is sent anywhere either way.</p></noscript>
+
+    <section id="state-tool" class="state-tool">
+      <p class="hint"><span data-i18n="renew.stateTool">Not sure the rules apply to you? Maryland has its own online tool and a phone line:</span> <a id="state-tool-link" href="https://www.marylandhealthconnection.gov/checkin/" target="_blank" rel="noopener noreferrer" data-i18n="renew.stateToolLink">Maryland Health Connection Medicaid Check-In</a>, <span id="state-phone"></span>.</p>
+    </section>
+
+    <form id="renew-form" class="renew" novalidate>
+      <div class="field">
+        <label for="month" data-i18n="renew.month.label">Which month does your letter ask about?</label>
+        <p class="hint" id="month-hint" data-i18n="renew.month.hint">The rule looks at one month at a time. Start with the most recent full month.</p>
+        <input id="month" name="month" type="month" aria-describedby="month-hint">
+      </div>
+
+      <div class="field">
+        <label for="memberName" data-i18n="renew.name.label">Your name, as it appears on your Medicaid letter</label>
+        <input id="memberName" name="memberName" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="caseNumber" data-i18n="renew.case.label">Case or notice number from the letter, if you have it</label>
+        <input id="caseNumber" name="caseNumber" autocomplete="off">
+      </div>
+
+      <fieldset class="field">
+        <legend data-i18n="renew.jobs.legend">Pay from jobs in that month</legend>
+        <p class="hint" id="jobs-hint" data-i18n="renew.jobs.hint">One row per job. Gross means before taxes. Use the pay stubs that were paid in that month.</p>
+        <div id="jobs" class="jobs" aria-describedby="jobs-hint"></div>
+        <button type="button" id="add-job" class="check__button check__button--quiet" data-i18n="renew.addJob">Add another job</button>
+        <div class="field photo">
+          <label for="stubPhoto" data-i18n="renew.photo.label">Or take a photo of a pay stub</label>
+          <p class="hint" id="stubPhoto-hint" data-i18n="renew.photo.hint">The page reads it on this device to find the employer, the pay period, the hours and the gross pay. Nothing is uploaded. Press Use this on what is right, and the photo goes into the packet.</p>
+          <input id="stubPhoto" name="stubPhoto" type="file" accept="image/*" capture="environment" aria-describedby="stubPhoto-hint">
+          <p class="hint" id="stub-status" role="status" hidden></p>
+          <ul id="stub-findings" class="findings" hidden></ul>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend data-i18n="renew.other.legend">Other hours in that month</legend>
+        <div class="job job--hours">
+          <label><span data-i18n="renew.schoolHours.label">School</span><input id="schoolHours" name="schoolHours" inputmode="decimal" autocomplete="off"></label>
+          <label><span data-i18n="renew.trainingHours.label">Job training</span><input id="trainingHours" name="trainingHours" inputmode="decimal" autocomplete="off"></label>
+          <label><span data-i18n="renew.volunteerHours.label">Volunteering</span><input id="volunteerHours" name="volunteerHours" inputmode="decimal" autocomplete="off"></label>
+        </div>
+        <label class="choice"><input type="checkbox" id="halfTimeSchool" name="halfTimeSchool"> <span data-i18n="renew.halfTime.label">I was in school at least half-time that month</span></label>
+      </fieldset>
+
+      <fieldset class="field exemptions" id="exemptions">
+        <legend data-i18n="renew.exemptions.legend">Do any of these apply to you? Maryland decides; this only lists what to bring.</legend>
+        <p class="hint" data-i18n="renew.hintsNote">What people usually use. Maryland has not published its list and decides for itself.</p>
+        <div id="exemption-groups"></div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend data-i18n="renew.attachments.legend">Documents to put in the packet</legend>
+        <p class="hint" id="attachments-hint" data-i18n="renew.attachments.hint">Photos or PDFs: pay stubs, a school letter, a volunteer letter, a note from your doctor. Each gets its own page. Give each one a short label.</p>
+        <input id="attachmentFiles" name="attachmentFiles" type="file" accept="image/*,application/pdf" multiple aria-describedby="attachments-hint">
+        <ul id="attachments" class="attachments"></ul>
+      </fieldset>
+
+      <details class="optional field" id="work-statement">
+        <summary data-i18n="renew.statement.summary">Paid in cash or for odd jobs, with no pay stub? Add a work statement to sign</summary>
+        <p class="hint" data-i18n="renew.statement.hint">A one-page statement of the work, the dates, the hours and the pay, with a line for you and a line for the employer or client to sign.</p>
+        <div class="job">
+          <label><span data-i18n="renew.ws.employer">Employer or client</span><input id="wsEmployer" name="wsEmployer"></label>
+          <label><span data-i18n="renew.ws.contact">Their phone or email</span><input id="wsContact" name="wsContact"></label>
+          <label><span data-i18n="renew.ws.dates">Dates worked</span><input id="wsDates" name="wsDates"></label>
+          <label><span data-i18n="renew.ws.hours">Hours</span><input id="wsHours" name="wsHours" inputmode="decimal"></label>
+          <label><span data-i18n="renew.ws.pay">Pay</span><input id="wsPay" name="wsPay"></label>
+        </div>
+      </details>
+
+      <section id="summary" class="summary" aria-live="polite">
+        <h2 data-i18n="renew.summary.heading">This month so far</h2>
+        <p id="summary-earned"></p>
+        <p id="summary-hours"></p>
+        <p id="summary-meets" class="summary__meets"></p>
+        <p class="error" id="summary-warning" hidden></p>
+        <p class="hint" data-i18n="renew.decides">This is my own summary. Maryland Health Connection makes the decision.</p>
+      </section>
+
+      <p class="error" id="renew-error" role="alert" hidden></p>
+      <button type="submit" id="build-button" class="check__button" data-i18n="renew.build">Build the proof packet (PDF)</button>
+      <button type="button" id="record-button" class="check__button check__button--quiet" data-i18n="renew.record">Print the record for the counselor</button>
+      <button type="button" id="start-over" class="check__button check__button--quiet" data-i18n="renew.startOver">Start over for the next person</button>
+    </form>
+
+    <section id="handoff" class="handoff field">
+      <h2 data-i18n="renew.handoff.heading">Check the hospital bill with the same numbers</h2>
+      <p class="hint" data-i18n="renew.handoff.hint">Hospital financial assistance looks at household size and yearly income. Fix these if they are off, then go.</p>
+      <div class="job">
+        <label><span data-i18n="householdSize.label">How many people live in your household?</span><input id="householdSize" name="householdSize" inputmode="numeric" autocomplete="off" data-i18n-placeholder="householdSize.placeholder" placeholder="e.g. 4"></label>
+        <label><span data-i18n="income.label">Household income for the year, before taxes</span><input id="income" name="income" inputmode="decimal" autocomplete="off" data-i18n-placeholder="income.placeholder" placeholder="e.g. 60,000"></label>
+      </div>
+      <button type="button" id="to-bill" class="check__button" data-i18n="renew.toBillButton">Check the hospital bill with these numbers</button>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p data-i18n="renew.footer">Built on Maryland Health Connection's Medicaid Check-In page, read on November 6, 2026, and Public Law 119-21. It runs in your browser and sends nothing anywhere. A guide, not legal advice.</p>
+    <p><span data-i18n="footer.made">I am Ayush Kadigari, a student at the University of Maryland, not a hospital and not a lawyer. If this gets something wrong, tell me:</span> <a href="mailto:arkadigari@gmail.com">arkadigari@gmail.com</a>.</p>
+    <p><a href="https://github.com/akadigari/freecare" data-i18n="footer.code">The code is public on GitHub, every rule tested</a>.</p>
+  </footer>
+
+  <script type="module" src="src/renew.js"></script>
+</body>
+</html>

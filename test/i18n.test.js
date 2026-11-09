@@ -5,7 +5,8 @@ import { PAGE, UI, ERRORS_ES, RESULT, LANGS } from '../src/strings.js';
 import { pickLanguage, translateError, textFor } from '../src/i18n.js';
 import { FAILED_MESSAGE } from '../src/check.js';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+// Both pages are checked: every marked element on either page must have words in both languages.
+const html = ['index.html', 'renew.html'].map((file) => readFileSync(new URL(`../${file}`, import.meta.url), 'utf8')).join('\n');
 const formSource = readFileSync(new URL('../src/form.js', import.meta.url), 'utf8');
 const datesSource = readFileSync(new URL('../src/dates.js', import.meta.url), 'utf8');
 
